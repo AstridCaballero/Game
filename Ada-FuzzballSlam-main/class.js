@@ -74,7 +74,7 @@ class c_fuzzball {
             density: 0.95,
             frictionAir: 0.005,
         }
-        this.body = Matter.Bodies.circle(x, y, width, diameter/2, options); // matter.js used radius rather than diameter
+        this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter
         Matter.World.add(world, this.body);
 
         this.x = x;
@@ -94,8 +94,8 @@ class c_fuzzball {
             rotate(angle);
             noStroke();
             fill('#ffffff');
-            rectMode(CENTER); // switch centre to be centre rather than left, top
-            rect(0, 0, this.diameter);
+            ellipseMode(CENTER); // switch centre to be centre rather than left, top
+            circle(0, 0, this.diameter);
         pop();
     }
 }
