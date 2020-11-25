@@ -14,12 +14,21 @@ var crate = new c_crate(get_random(500, 650), 400, 120, 120);
 var fuzzball = new c_fuzzball (400, 200, 60);
 
 function apply_velocity() {
+	Matter.Body.setVelocity(fuzzball.body, {x:10, y:-5});
 };
 
 function apply_angularvelocity() {
+	Matter.Body.setAngularVelocity(crate.body, Math.PI/6);
 };
 
 function apply_force() {
+	Matter.Body.applyForce(crate.body, {
+		x: crate.body.position.x,
+		y: crate.body.position.y
+	}, {
+		x: 0.05,
+		y: -500.05
+	});
 };
 
 
