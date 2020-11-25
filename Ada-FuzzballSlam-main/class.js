@@ -9,7 +9,7 @@ class c_launcher {
             },
             bodyB: body, 
             stiffness: 0.02,
-            length: 80
+            length: 1
         }
         // create the constraint 
         this.launch = Matter.Constraint.create(options);
@@ -67,7 +67,7 @@ class c_crate {
     constructor(x, y, width, height) {
         let options = {            
             restitution: 0.99,
-            friction: 0.030,
+            friction: 0.5,
             density: 0.99,
             frictionAir: 0.032,
         }
@@ -104,8 +104,8 @@ class c_fuzzball {
     constructor(x, y, diameter) {
         let options = {            
             restitution: 0.90,
-            friction: 0.005,
-            density: 0.95,
+            friction: 0.5,
+            density: 0.99,
             frictionAir: 0.005,
         }
         this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter

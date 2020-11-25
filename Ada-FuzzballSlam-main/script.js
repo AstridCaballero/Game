@@ -11,10 +11,12 @@ var ground;
 var leftwall;
 var rightwall;
 
+
 var fuzzball;
 var launcher;
 var score = 0;
 var lives = 0;
+
 
 function apply_velocity() {
 	Matter.Body.setVelocity( fuzzball.body, {x: get_random(0, 20), y: get_random(0, 20)*-1});
@@ -45,8 +47,13 @@ function get_random(min, max) {
 }
 
 function preload() {
-	//p5 defined function
-	
+	// img = loadImage("SlamBackground920x690.png");
+	//image(backgroundImg, 0, 0);
+	// backgroundImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png');
+	//backgroundImg = loadImage('SlamBackground920x690.png');
+	//launcherImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
+	//fuzzballImg = loadImage('Fuzzball60x60.png');
+
 }
 
 function setup() {
@@ -79,11 +86,12 @@ function setup() {
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
-		crate[i] = new c_crate(700, (150*i)-200, 120, 120);		
+		crate[i] = new c_crate(get_random(680, 720), (150*i)-200, 120, 120);		
 	} 
 
 	//create a launcher object using the fuzzball body
-	launcher = new c_launcher(400, 200, fuzzball.body);
+	launcher = new c_launcher(200, 600, fuzzball.body);
+
 
 	frameRate(60);
 }
@@ -100,7 +108,7 @@ function paint_background() {
 
 
 function paint_assets() {
-	for (let i = 0; i < crate.lenght; i++){ // Loop through the crate array and show each
+	for (let i = 0; i < crate.length; i++){ // Loop through the crate array and show each
 		crate[i].show()
 	}
 	fuzzball.show(); //show the fuzzball
@@ -112,7 +120,8 @@ function paint_assets() {
 function draw() {
 	//this p5 defined function runs every refresh cycle
 	paint_background(); // paint the default background 
-	
+	//image(backgroundImg, 0, 0);
+
 	
 	Matter.Engine.update(engine); // run the matter engine update
 	paint_assets(); // paint the assets	
