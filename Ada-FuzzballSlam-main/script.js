@@ -1,5 +1,5 @@
 "use strict";
-// this is a test to see if I can push/commit the code via github – ACM
+
 var vp_width = 920, vp_height = 690;
 var world, engine, body;
 
@@ -11,7 +11,7 @@ body = Matter.Body;
 // instantiate classes
 var ground = new c_ground(vp_width/2, vp_height-10, vp_width, 20);
 var crate = new c_crate(get_random(500, 650), 400, 120, 120);
-
+var fuzzball = new c_fuzzball (400, 200, 60);
 
 function apply_velocity() {
 };
@@ -51,6 +51,7 @@ function paint_background() {
 function paint_assets() {
 	ground.show();
 	crate.show();
+	fuzzball.show();
 }
 
 
