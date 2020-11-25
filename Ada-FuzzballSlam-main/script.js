@@ -1,7 +1,7 @@
 "use strict";
 
-var vp_width = 920, vp_height = 690;//decalre variables to hold the viewport size
-var max_crates = 10;
+var vp_width = 920, vp_height = 690;//declare variables to hold the viewport size
+var max_crates = 3;
 
 //declare global variables to hold the framework objects
 var viewport, world, engine, body, elastic_constraint;
@@ -13,11 +13,8 @@ var rightwall;
 
 var fuzzball;
 var launcher;
-
-// // instantiate classes
-// var ground = new c_ground(vp_width/2, vp_height-10, vp_width, 20);
-// var crate = new c_crate(get_random(500, 650), 400, 120, 120);
-// var fuzzball = new c_fuzzball (400, 200, 60);
+var score = 0;
+var lives = 0;
 
 function apply_velocity() {
 	Matter.Body.setVelocity( fuzzball.body, {x: get_random(0, 20), y: get_random(0, 20)*-1});
@@ -107,7 +104,8 @@ function paint_assets() {
 		crate[i].show()
 	}
 	fuzzball.show(); //show the fuzzball
-	launcher.show(); //show the launcher indicator
+	launcher.show(); //show the launcher indicator	
+	
 }
 
 
@@ -115,18 +113,30 @@ function draw() {
 	//this p5 defined function runs every refresh cycle
 	paint_background(); // paint the default background 
 	
+	
 	Matter.Engine.update(engine); // run the matter engine update
-	paint_assets(); // paint the assets
+	paint_assets(); // paint the assets	
 
 	if(elastic_constraint.body !== null) {
 		let pos = elastic_constraint.body.position; // create a shortcut alias
 		fill("#ff0000"); // set a fill colour
-		ellipse(po.x, pos.y, 20, 20); // indicate the body that has been selected 
+		ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
 
 		let mouse = elastic_constraint.mouse.position;
 		stroke("#00ff00");
 		line(pos.x, pos.y, mouse.x, mouse.y);
 	}
+	// displays the score
+	fill(0,255,0);
+	textSize(32);
+	text("Score: ", 600, 80);
+	text(score, 700, 80);
+
+	// displays lives	
+	text(lives, 100, 80);
+	text("lives left", 130, 80);
+	
+	
 }
 
 
