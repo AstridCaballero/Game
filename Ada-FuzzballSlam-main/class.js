@@ -26,8 +26,14 @@ class c_launcher {
         if(this.launch.bodyB) {
             let posA = this.launch.pointA; // create a shortcut alias
             let posB = this.launch.bodyB.position;
-            stroke("#00ff00"); // set a colour
+
+        push();    
+            translate((posA.x-50), posA.y);
             line(posA.x, posA.y, posB.x, posB.y); //draw a line between the two points
+            imageMode(CENTER);
+            image(lnchImg, 0, 0);
+        pop();    
+            
         }
     }
 }
@@ -90,11 +96,10 @@ class c_crate {
 
         push(); // p5 translation
             stroke("#000000");
-            fill("#ffffff");
-            rectMode(CENTER); // switch centre to be centre rather than left, top
+            imageMode(CENTER); // switch centre to be centre rather than left, top
             translate(pos.x, pos.y);
             rotate(angle);
-            rect(0, 0, this.width, this.height)
+            image(crImg, 0, 0, this.width, this.height)
         pop();
     }
 }
@@ -127,10 +132,9 @@ class c_fuzzball {
         push(); // p5 translation
             translate(pos.x, pos.y);
             rotate(angle);
-            // noStroke(); This isn't in Mike's Ties iteration
             fill("#ffffff");
-            ellipseMode(CENTER); // switch centre to be centre rather than left, top
-            circle(0, 0, this.diameter);
+            imageMode(CENTER); // switch centre to be centre rather than left, top
+            image(fbImg, 0, 0, this.diameter, this.diameter);
         pop();
     }
 }

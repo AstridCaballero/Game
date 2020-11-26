@@ -17,6 +17,9 @@ var launcher;
 var score = 0;
 var lives = 0;
 var img;
+var fbImg;
+var crImg;
+var lnchImg;
 
 var gameState = 'start';
 
@@ -51,6 +54,9 @@ function get_random(min, max) {
 
 function preload() {
 	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");
+	fbImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');
+	crImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');
+	lnchImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
 }
 
 function setup() {
@@ -108,8 +114,9 @@ function paint_assets() {
 	for (let i = 0; i < crate.length; i++){ // Loop through the crate array and show each
 		crate[i].show()
 	}
+	launcher.show(); //show the launcher indicator
 	fuzzball.show(); //show the fuzzball
-	launcher.show(); //show the launcher indicator	
+		
 	
 }
 
@@ -119,9 +126,9 @@ function draw() {
 	paint_background(); // paint the default background 
 	
 	Matter.Engine.update(engine); // run the matter engine update
-	paint_assets(); // paint the assets	
-
-	if(elastic_constraint.body !== null) {
+	paint_assets(); // ?? move this?
+	
+	if (elastic_constraint.body !== null) {
 		let pos = elastic_constraint.body.position; // create a shortcut alias
 		fill("#ff0000"); // set a fill colour
 		ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
@@ -130,6 +137,9 @@ function draw() {
 		stroke("#00ff00");
 		line(pos.x, pos.y, mouse.x, mouse.y);
 	}
+
+	
+
 	// displays the score
 	fill(0,255,0);
 	textSize(32);
