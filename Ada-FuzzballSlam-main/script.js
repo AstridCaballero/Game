@@ -11,7 +11,6 @@ var ground;
 var leftwall;
 var rightwall;
 
-
 var fuzzball;
 var launcher;
 
@@ -119,10 +118,12 @@ function paint_background() {
 
 
 function paint_assets() {
+	
 	for (let i = 0; i < crate.length; i++){ // Loop through the crate array and show each
 		crate[i].show()
 	}
-	launcher.show(); //show the launcher indicator
+	 //show the launcher indicator
+	launcher.show();
 	fuzzball.show(); //show the fuzzball
 		
 	
@@ -197,7 +198,7 @@ function keyPressed() {
 
 	if (keyCode === 32) {
 		console.log("space key press");
-		launcher.release(); // execute the release method
+		launcher.release(); // currently this drops the fuzzball but doesn't "launch" it
 	}
 	if (keyCode === 80){
 		console.log("p key press");

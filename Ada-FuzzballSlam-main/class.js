@@ -14,7 +14,6 @@ class c_launcher {
         // create the constraint 
         this.launch = Matter.Constraint.create(options);
         Matter.World.add(world, this.launch); // add to the matter world
-
     }
     release() {
         //release the constrained body by setting it to null
@@ -64,7 +63,6 @@ class c_ground {
         rectMode(CENTER); // switch centre to be centre rather than left, top
         fill("#ffffff"); // set the fill colour
         rect(pos.x, pos.y, this.width, this.height) // draw the rectangle 
-        //noStroke(); // THIS ISN'T IN MIKE's Tues iteration of the code
     }
 }
 
