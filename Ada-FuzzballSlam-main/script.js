@@ -16,6 +16,9 @@ var fuzzball;
 var launcher;
 var score = 0;
 var lives = 0;
+var img;
+
+var gameState = 'start';
 
 
 function apply_velocity() {
@@ -47,13 +50,7 @@ function get_random(min, max) {
 }
 
 function preload() {
-	// img = loadImage("SlamBackground920x690.png");
-	//image(backgroundImg, 0, 0);
-	// backgroundImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png');
-	//backgroundImg = loadImage('SlamBackground920x690.png');
-	//launcherImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
-	//fuzzballImg = loadImage('Fuzzball60x60.png');
-
+	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");
 }
 
 function setup() {
@@ -99,7 +96,7 @@ function setup() {
 
 function paint_background() {
 	// access the game object for the world, use this as a background image for the game
-	background('#4c738b');
+	background(img);
 
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
@@ -120,8 +117,6 @@ function paint_assets() {
 function draw() {
 	//this p5 defined function runs every refresh cycle
 	paint_background(); // paint the default background 
-	//image(backgroundImg, 0, 0);
-
 	
 	Matter.Engine.update(engine); // run the matter engine update
 	paint_assets(); // paint the assets	
