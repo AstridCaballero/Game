@@ -36,6 +36,10 @@ class c_launcher {
             
         }
     }
+
+    attach(body) {
+        this.launch.bodyB = body;
+    }
 }
 
 class c_ground {
