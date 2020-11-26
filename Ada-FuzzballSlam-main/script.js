@@ -88,12 +88,12 @@ function setup() {
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
-
+	
 	ground = new c_ground(vp_width/2, vp_height-10, vp_width, 20); // create a ground object
 	leftwall = new c_ground(0, vp_height/2, 20, vp_height);
 	rightwall = new c_ground(vp_width, vp_height/2, 20, vp_height);
 
-	fuzzball = new c_fuzzball(400, 220, 60); // create a fuzzball object
+	fuzzball = new c_fuzzball(200, vp_height-100, 60); // create a fuzzball object
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
@@ -101,8 +101,7 @@ function setup() {
 	} 
 
 	//create a launcher object using the fuzzball body
-	launcher = new c_launcher(200, 600, fuzzball.body);
-
+	launcher = new c_launcher(200, vp_height-100, fuzzball.body);
 
 	frameRate(60);
 }
@@ -146,18 +145,19 @@ function draw() {
 		fill(0,0,0);
 		textSize(32);
 		text("press p to play ", (vp_width/2) -120, vp_height/2);		
-		}
-	else {	
+		}		
+	else {			
 		// is game status is 'play' then load the crate, fuzzball and launcher			
 		paint_assets(); // paint the assets		
-
-		if(elastic_constraint.body !== null) {
+		
+		if(elastic_constraint.body !== null) {	
+			console.log("elastic")		
 			let pos = elastic_constraint.body.position; // create a shortcut alias
 			fill("#ff0000"); // set a fill colour
 			ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
 
 			let mouse = elastic_constraint.mouse.position;
-			stroke("#00ff00");
+			stroke("#000000");
 			line(pos.x, pos.y, mouse.x, mouse.y);
 		}
 		// displays the score
@@ -175,23 +175,26 @@ function gameText(){
 	rect(770, 30, 170, 50, 10);// last parameter rounds the corners of the rectangle
 	fill(0,0,0);
 	textSize(32);
-	text("Score: ", 700, 40);
-	text(score, 800, 40);
+	text("Score: " + score , 700, 40);	
 
 	// displays lives	
 	fill(255,255,255);
 	noStroke();
 	rect(108, 30, 180, 50, 10);
 	fill(0,0,0);
-	text("Lives left", 30, 40);
-	text(lives, 160, 40);	
+	text("Lives left " + lives, 30, 40);
+	
 }
 
 
 function keyPressed() {
-	if (keyCode === ENTER || key === RETURN) {
+	if (keyCode === ENTER || keyCode === RETURN) {// TODO RETURN NEEDED?
 		console.log("enter key press");
-		fuzzball = new c_fuzzball(400, 200, 60);	
+		//load a new ball, launcher and elastic_constraint
+		fuzzball = new c_fuzzball(200, vp_height-100, 60);
+		launcher = new c_launcher(200, vp_height-100, fuzzball.body);			
+		elastic_constraint = Matter.MouseConstraint.create(engine, options);
+		// Matter.World.add(world, elastic_constraint);
 		noLoop();	
 	}
 
