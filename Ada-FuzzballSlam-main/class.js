@@ -50,7 +50,10 @@ class c_ground {
             restitution: 0.99,
             friction: 0.20,
             density: 0.99,
-            label: label,
+            label: label
+            // collisionFilter: {
+            //     category: Category1,
+            // }
         }
         //create the body 
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -64,9 +67,8 @@ class c_ground {
         this.color = "#ffffff";
     }
 
-    set.color(value) {
+    set colour(value) {
         this.color = value;
-    }
 
 }
 
@@ -104,7 +106,7 @@ class c_crate {
         this.color = "#ffffff";
     }
 
-    set.color(value) {
+    set colour(value) {
         this.color = value;
     }
     
@@ -128,7 +130,7 @@ class c_crate {
 
 
 class c_fuzzball {
-    constructor(x, y, diameter) {
+    constructor(x, y, diameter, label) {
         let options = {            
             restitution: 0.90,
             friction: 0.5,
@@ -136,7 +138,7 @@ class c_fuzzball {
             frictionAir: 0.005,
             label: label,
             collisionFilter: {
-                category: Category 2,
+                category: Category2,
             }
         }
         this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter

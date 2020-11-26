@@ -70,14 +70,12 @@ function collisions(event) {
 	
 	event.pairs.forEach((collide) => { //event.pairs[0].bodyA.label
 		
-		console.log(collide.bodyA.label);
-
 		if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate") || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
-			crate.color = "#ff0000";
+			crate.fill = "#ff0000";
 		} else {
-			crate.colour = "#ffffff";
+			crate.fill = "#000000";
 		}
-
+		console.log(collide.bodyA.label);
 		// if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate")) || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
 		// 	crate.color = "#ff0000";
 		// } else {
@@ -96,12 +94,19 @@ function setup() {
 	world = engine.world;
 	body = Matter.Body;
 
+	//world.gravity.y = 2;
+
+	Matter.Events.on(engine, 'collisionEnd', collisions);
+
 	// enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
 	let vp_mouse = Matter.Mouse.create(viewport.elt);
 	vp_mouse.pixelRatio = pixelDensity(); // update the pixel ratio with the p5 density value this supports
 	//retina screens, etc
 	let options = {
-		mouse: vp_mouse
+		mouse: vp_mouse,
+		collisionFilter: {
+			mask: defaultCategory | Category2
+		}
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
@@ -172,14 +177,17 @@ function draw() {
 		paint_assets(); // paint the assets		
 		
 		if(elastic_constraint.body !== null) {	
-			console.log("elastic")		
-			let pos = elastic_constraint.body.position; // create a shortcut alias
-			fill("#ff0000"); // set a fill colour
-			ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
+			if(elastic_constraint.body.label === "fuzzball") {
+				console.log(elastic_constraint.body.label);
+				let pos = elastic_constraint.body.position; // create a shortcut alias
+				fill("#ff0000"); // set this to transparent 
+				ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
 
-			let mouse = elastic_constraint.mouse.position;
-			stroke("#000000");
-			line(pos.x, pos.y, mouse.x, mouse.y);
+				let mouse = elastic_constraint.mouse.position;
+				stroke("#000000");
+				line(pos.x, pos.y, mouse.x, mouse.y);
+			}
+			
 		}
 		// displays the score
 		noStroke();
