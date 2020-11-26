@@ -14,10 +14,16 @@ var rightwall;
 
 var fuzzball;
 var launcher;
-var score = 0;
-var lives = 0;
+
+//variables related to the images
 var img;
 
+// variables to calculate during the game
+var score = 0;
+var lives = 0;
+
+
+// variable to keep track of the state of the game
 var gameState = 'start';
 
 
@@ -119,28 +125,40 @@ function draw() {
 	paint_background(); // paint the default background 
 	
 	Matter.Engine.update(engine); // run the matter engine update
-	paint_assets(); // paint the assets	
-
-	if(elastic_constraint.body !== null) {
-		let pos = elastic_constraint.body.position; // create a shortcut alias
-		fill("#ff0000"); // set a fill colour
-		ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
-
-		let mouse = elastic_constraint.mouse.position;
-		stroke("#00ff00");
-		line(pos.x, pos.y, mouse.x, mouse.y);
+	// check game status
+	if(gameState = 'start'){
+		noStroke();
+		gameText();
 	}
-	// displays the score
-	fill(0,255,0);
+	else {
+		paint_assets(); // paint the assets		
+
+		if(elastic_constraint.body !== null) {
+			let pos = elastic_constraint.body.position; // create a shortcut alias
+			fill("#ff0000"); // set a fill colour
+			ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
+
+			let mouse = elastic_constraint.mouse.position;
+			stroke("#00ff00");
+			line(pos.x, pos.y, mouse.x, mouse.y);
+		}
+		// displays the score
+		noStroke();
+		gameText();
+	}
+	
+}
+
+// text setup
+function gameText(){
+	fill(0,0,0);
 	textSize(32);
-	text("Score: ", 600, 80);
-	text(score, 700, 80);
+	text("Score: ", 700, 40);
+	text(score, 800, 40);
 
 	// displays lives	
-	text(lives, 100, 80);
-	text("lives left", 130, 80);
-	
-	
+	text(lives, 50, 40);
+	text("lives left", 80, 40);
 }
 
 
