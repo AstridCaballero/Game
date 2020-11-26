@@ -193,10 +193,10 @@ function keyPressed() {
 		console.log("enter key press");
 		//load a new ball, launcher and elastic_constraint
 		fuzzball = new c_fuzzball(200, vp_height-100, 60);
-		launcher = new c_launcher(200, vp_height-100, fuzzball.body);			
-		elastic_constraint = Matter.MouseConstraint.create(engine, options);
-		// Matter.World.add(world, elastic_constraint);
-		noLoop();	
+		launcher = new c_launcher(200, vp_height-100, fuzzball.body);
+		launcher.attach(fuzzball.body);	//ataches a body (in this case fuzzball) to the launcher object 	
+		
+		// noLoop();	
 	}
 
 	if (keyCode === 32) {
