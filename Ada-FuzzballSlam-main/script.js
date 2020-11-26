@@ -66,6 +66,26 @@ function preload() {
 	
 }
 
+function collisions(event) {
+	
+	event.pairs.forEach((collide) => { //event.pairs[0].bodyA.label
+		
+		console.log(collide.bodyA.label);
+
+		if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate") || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
+			crate.color = "#ff0000";
+		} else {
+			crate.colour = "#ffffff";
+		}
+
+		// if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate")) || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
+		// 	crate.color = "#ff0000";
+		// } else {
+		// 	crate.color = "#ffffff";
+		// }
+	});
+}
+
 function setup() {
 	//this p5 defined function runs automatically once the preload function is done
 	viewport = createCanvas(vp_width, vp_height); // set the viewport (canvas) size

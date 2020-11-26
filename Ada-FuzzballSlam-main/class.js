@@ -1,5 +1,7 @@
 "use strict";
 
+var defaultCategory = 0x0001, Category1 = 0x0002, Category2 = 0x0004
+
 class c_launcher {
     constructor(x, y, body) { // see docs on http://brm.io/matter-js/docs/classes/Constraint.html#properties
         let options = {
@@ -42,12 +44,13 @@ class c_launcher {
 }
 
 class c_ground {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, label) {
         let options = {
             isStatic: true,
             restitution: 0.99,
             friction: 0.20,
             density: 0.99,
+            label: label,
         }
         //create the body 
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -57,7 +60,16 @@ class c_ground {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.label = label;
+        this.color = "#ffffff";
     }
+
+    set.color(value) {
+        this.color = value;
+    }
+
+}
+
     body() {
         return this.body; // return the created body
     }
@@ -72,12 +84,13 @@ class c_ground {
 
 
 class c_crate {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, label) {
         let options = {            
             restitution: 0.99,
             friction: 0.5,
             density: 0.90,
             frictionAir: 0.032,
+            label: label,
         }
         // create the body
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -87,7 +100,14 @@ class c_crate {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.label = label;
+        this.color = "#ffffff";
     }
+
+    set.color(value) {
+        this.color = value;
+    }
+    
     body() {
         return this.body; //return the created body 
     }
@@ -114,6 +134,10 @@ class c_fuzzball {
             friction: 0.5,
             density: 0.99,
             frictionAir: 0.005,
+            label: label,
+            collisionFilter: {
+                category: Category 2,
+            }
         }
         this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter
         Matter.World.add(world, this.body);
@@ -121,6 +145,7 @@ class c_fuzzball {
         this.x = x;
         this.y = y;
         this.diameter = diameter;
+        this.label = label;
     }
 
     body() {
