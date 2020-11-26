@@ -68,7 +68,7 @@ class c_crate {
         let options = {            
             restitution: 0.99,
             friction: 0.5,
-            density: 0.99,
+            density: 0.90,
             frictionAir: 0.032,
         }
         // create the body
