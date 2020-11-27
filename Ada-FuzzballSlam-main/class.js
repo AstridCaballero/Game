@@ -44,13 +44,12 @@ class c_launcher {
 }
 
 class c_ground {
-    constructor(x, y, width, height, label) {
+    constructor(x, y, width, height) {
         let options = {
             isStatic: true,
             restitution: 0.99,
             friction: 0.20,
-            density: 0.99,
-            label: label,
+            density: 0.99            
         }
         //create the body 
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -59,17 +58,9 @@ class c_ground {
         this.x = x;
         this.y = y;
         this.width = width;
-        this.height = height;
-        this.label = label;
-        this.color = "#ffffff";
+        this.height = height;        
     }
-
-    set.color(value) {
-        this.color = value;
-    }
-
-}
-
+  
     body() {
         return this.body; // return the created body
     }
@@ -84,13 +75,12 @@ class c_ground {
 
 
 class c_crate {
-    constructor(x, y, width, height, label) {
+    constructor(x, y, width, height) {
         let options = {            
             restitution: 0.99,
             friction: 0.5,
             density: 0.90,
-            frictionAir: 0.032,
-            label: label,
+            frictionAir: 0.032,           
         }
         // create the body
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -100,12 +90,9 @@ class c_crate {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.label = label;
-        this.color = "#ffffff";
-    }
-
-    set.color(value) {
-        this.color = value;
+        this.hitFuzz = 'False';
+        this.count = 0;
+       
     }
     
     body() {
@@ -133,19 +120,15 @@ class c_fuzzball {
             restitution: 0.90,
             friction: 0.5,
             density: 0.99,
-            frictionAir: 0.005,
-            label: label,
-            collisionFilter: {
-                category: Category 2,
-            }
+            frictionAir: 0.005            
         }
         this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter
         Matter.World.add(world, this.body);
 
         this.x = x;
         this.y = y;
-        this.diameter = diameter;
-        this.label = label;
+        this.diameter = diameter;   
+        this.count = 0;     
     }
 
     body() {

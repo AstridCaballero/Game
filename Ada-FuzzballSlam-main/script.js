@@ -22,9 +22,9 @@ var lnchImg;
 
 // variables to calculate during the game
 var score = 0;
-var lives = 0;
-
-
+var lives = 3;
+var collision_ground;
+var collision_fuzzball;
 
 // variable to keep track of the state of the game
 var gameState = 'start';;
@@ -66,25 +66,6 @@ function preload() {
 	
 }
 
-function collisions(event) {
-	
-	event.pairs.forEach((collide) => { //event.pairs[0].bodyA.label
-		
-		console.log(collide.bodyA.label);
-
-		if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate") || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
-			crate.color = "#ff0000";
-		} else {
-			crate.colour = "#ffffff";
-		}
-
-		// if((collide.bodyA.label === "fuzzball" && collide.bodyB.label === "crate")) || (collide.bodyA.label === "crate" && collide.bodyB.label === "fuzzball")) {
-		// 	crate.color = "#ff0000";
-		// } else {
-		// 	crate.color = "#ffffff";
-		// }
-	});
-}
 
 function setup() {
 	//this p5 defined function runs automatically once the preload function is done
@@ -94,7 +75,9 @@ function setup() {
 	//enable the matter engine
 	engine = Matter.Engine.create();
 	world = engine.world;
-	body = Matter.Body;
+	body = Matter.Body;	
+
+	
 
 	// enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
 	let vp_mouse = Matter.Mouse.create(viewport.elt);
@@ -121,6 +104,8 @@ function setup() {
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(200, vp_height-100, fuzzball.body);
+
+	collision_ground = Matter.SAT.collides(fuzzball.body, ground.body);
 
 	frameRate(60);
 }
@@ -171,19 +156,32 @@ function draw() {
 		// is game status is 'play' then load the crate, fuzzball and launcher			
 		paint_assets(); // paint the assets		
 		
-		if(elastic_constraint.body !== null) {	
-			console.log("elastic")		
+		if(elastic_constraint.body !== null) {				
+			// console.log("elastic")		
 			let pos = elastic_constraint.body.position; // create a shortcut alias
 			fill("#ff0000"); // set a fill colour
 			ellipse(pos.x, pos.y, 20, 20); // indicate the body that has been selected 
 
 			let mouse = elastic_constraint.mouse.position;
 			stroke("#000000");
-			line(pos.x, pos.y, mouse.x, mouse.y);
+			line(pos.x, pos.y, mouse.x, mouse.y);			
 		}
 		// displays the score
 		noStroke();
-		gameText();
+		gameText();				
+
+		// check collision to get points
+		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
+			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
+			collision_fuzzball = Matter.SAT.collides(fuzzball.body, crate[i].body);
+			// crate have a propertty called hitfuzz set to False by default
+			// Only add points to score when the crate is hit for the first time			
+			if ((collision_fuzzball.collided) && (crate[i].hitFuzz == 'False')) {			
+					crate[i].hitFuzz = 'True';
+					score += 10;				
+			}
+		}	
+		
 	}
 	
 }
@@ -203,8 +201,7 @@ function gameText(){
 	noStroke();
 	rect(108, 30, 180, 50, 10);
 	fill(0,0,0);
-	text("Lives left " + lives, 30, 40);
-	
+	text("Lives left " + lives, 30, 40);	
 }
 
 
@@ -212,10 +209,9 @@ function keyPressed() {
 	if (keyCode === ENTER || keyCode === RETURN) {// TODO RETURN NEEDED?
 		console.log("enter key press");
 		//load a new ball, launcher and elastic_constraint
-		fuzzball = new c_fuzzball(200, vp_height-100, 60);
+		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
 		launcher = new c_launcher(200, vp_height-100, fuzzball.body);
-		launcher.attach(fuzzball.body);	//ataches a body (in this case fuzzball) to the launcher object 	
-		
+		launcher.attach(fuzzball.body);	//ataches a body (in this case fuzzball) to the launcher object 
 		// noLoop();	
 	}
 
@@ -233,7 +229,5 @@ function keyPressed() {
 function mouseReleased() {
 	setTimeout(() => {
 		launcher.release();
-	}, 100);
+	}, 100);	
 }
-
-
