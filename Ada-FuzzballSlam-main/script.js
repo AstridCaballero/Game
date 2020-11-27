@@ -76,11 +76,6 @@ function setup() {
 	world = engine.world;
 	body = Matter.Body;	
 
-	
-
-	//world.gravity.y = 2;
-
-	Matter.Events.on(engine, 'collisionEnd', collisions);
 
 	// enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
 	let vp_mouse = Matter.Mouse.create(viewport.elt);
