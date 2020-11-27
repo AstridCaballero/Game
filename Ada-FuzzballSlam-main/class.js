@@ -68,8 +68,8 @@ class c_ground {
     show() {
         let pos = this.body.position; // create a shortcut alias
         rectMode(CENTER); // switch centre to be centre rather than left, top
-        fill("#ffffff"); // set the fill colour
-        rect(pos.x, pos.y, this.width, this.height) // draw the rectangle 
+        //fill("#ffffff"); // set the fill colour
+        //rect(pos.x, pos.y, this.width, this.height) // draw the rectangle 
     }
 }
 
@@ -143,8 +143,9 @@ class c_fuzzball {
         push(); // p5 translation
             translate(pos.x, pos.y);
             rotate(angle);
-            fill("#ffffff");
+            //fill("#ffffff");
             imageMode(CENTER); // switch centre to be centre rather than left, top
+            //make fbImg part of this function instead of a global variable
             image(fbImg, 0, 0, this.diameter, this.diameter);
         pop();
     }

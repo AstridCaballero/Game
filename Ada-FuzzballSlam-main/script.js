@@ -84,8 +84,9 @@ function setup() {
 	//retina screens, etc
 	let options = {
 		mouse: vp_mouse,
+		// will pick only the fuzzball, not the crate(s)		
 		collisionFilter: {
-			mask: defaultCategory | Category2
+			mask: defaultCategory | Category2 //EDIT
 		}
 	}
 
@@ -93,7 +94,7 @@ function setup() {
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
 	
-	ground = new c_ground(vp_width/2, vp_height-10, vp_width, 20); // create a ground object
+	ground = new c_ground(vp_width/2, vp_height-30, vp_width, 20); // create a ground object
 	leftwall = new c_ground(0, vp_height/2, 20, vp_height);
 	rightwall = new c_ground(vp_width, vp_height/2, 20, vp_height);
 
@@ -170,6 +171,7 @@ function draw() {
 		noStroke();
 		gameText();				
 
+		// REFACTOR?
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
@@ -187,13 +189,14 @@ function draw() {
 }
 
 // text setup for score and lives
-function gameText(){
+function gameText(){ // REFACTOR 
 	//displays the score
 	fill(255,255,255);
 	noStroke();
 	rect(770, 30, 170, 50, 10);// last parameter rounds the corners of the rectangle
 	fill(0,0,0);
 	textSize(32);
+	// textAlign(CENTER);
 	text("Score: " + score , 700, 40);	
 
 	// displays lives	
@@ -208,11 +211,14 @@ function gameText(){
 function keyPressed() {
 	if (keyCode === ENTER || keyCode === RETURN) {// TODO RETURN NEEDED?
 		console.log("enter key press");
+		//Remove matter fuzzball
+		// Matter.World.remove(world.fuzzball);
+		// Matter.World.remove(world.launcher);
 		//load a new ball, launcher and elastic_constraint
 		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
 		launcher = new c_launcher(200, vp_height-100, fuzzball.body);
 		launcher.attach(fuzzball.body);	//ataches a body (in this case fuzzball) to the launcher object 
-		// noLoop();	
+		// noLoop(); // stops the draw cycle, the result is a frozen image	
 	}
 
 	if (keyCode === 32) {
@@ -229,5 +235,5 @@ function keyPressed() {
 function mouseReleased() {
 	setTimeout(() => {
 		launcher.release();
-	}, 100);	
+	}, 100);
 }
