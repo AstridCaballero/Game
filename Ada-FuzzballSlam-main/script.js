@@ -66,7 +66,6 @@ function preload() {
 	
 }
 
-
 function setup() {
 	//this p5 defined function runs automatically once the preload function is done
 	viewport = createCanvas(vp_width, vp_height); // set the viewport (canvas) size
@@ -79,12 +78,19 @@ function setup() {
 
 	
 
+	//world.gravity.y = 2;
+
+	Matter.Events.on(engine, 'collisionEnd', collisions);
+
 	// enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
 	let vp_mouse = Matter.Mouse.create(viewport.elt);
 	vp_mouse.pixelRatio = pixelDensity(); // update the pixel ratio with the p5 density value this supports
 	//retina screens, etc
 	let options = {
-		mouse: vp_mouse
+		mouse: vp_mouse,
+		collisionFilter: {
+			mask: defaultCategory | Category2
+		}
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties

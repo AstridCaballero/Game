@@ -49,7 +49,7 @@ class c_ground {
             isStatic: true,
             restitution: 0.99,
             friction: 0.20,
-            density: 0.99            
+            density: 0.99,           
         }
         //create the body 
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
@@ -60,7 +60,7 @@ class c_ground {
         this.width = width;
         this.height = height;        
     }
-  
+
     body() {
         return this.body; // return the created body
     }
@@ -92,8 +92,8 @@ class c_crate {
         this.height = height;
         this.hitFuzz = 'False';
         this.count = 0;
-       
     }
+
     
     body() {
         return this.body; //return the created body 
@@ -120,8 +120,9 @@ class c_fuzzball {
             restitution: 0.90,
             friction: 0.5,
             density: 0.99,
-            frictionAir: 0.005            
-        }
+            frictionAir: 0.005,           
+            }        
+
         this.body = Matter.Bodies.circle(x, y, diameter/2, options); // matter.js used radius rather than diameter
         Matter.World.add(world, this.body);
 
