@@ -27,8 +27,6 @@ var hit;
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
-var collision_ground;
-var collision_fuzzball;
 var countGround = 0;
 
 // variable to keep track of the state of the game
@@ -167,10 +165,7 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-		
-	
 }
-
 
 function draw() {
 	//this p5 defined function runs every refresh cycle
@@ -204,39 +199,34 @@ function draw() {
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-			collision_fuzzball = Matter.SAT.collides(fuzzball.body, crate[i].body);			
-			// crate have a propertty called hitfuzz set to False by default
-			// Only add points to score when the crate is hit for the first time			
-			if ((collision_fuzzball.collided) && (crate[i].hitFuzz == 'False')) {			
-				crate[i].hitFuzz = 'True';
-				score += 10;				
-			}
+			circleRect_Intersection(fuzzball, crate[i]);	
 			//Collision Ground-crate
-			collision_ground = Matter.SAT.collides(crate[i].body, ground.body);			
-			//The ground has a property called hitCrate set to 'false' by default
-			// Only add points to the score when crate[i] hits the floor for the first time
-			if((collision_ground.collided) && (crate[i].hitGround == 'False')) {									
-				crate[i].hitGround = 'True';
-				score += 20;
-				countGround += 1;
-				//If all the crates have hit the floor then add 20 points 
-				//to count the one that was laready on the floor
-				if(countGround === crate.length){
-					score += 20;	
+			rectRect_Intersection(crate[i], ground);
+			// collision_ground = Matter.SAT.collides(crate[i].body, ground.body);			
+			// //The ground has a property called hitCrate set to 'false' by default
+			// // Only add points to the score when crate[i] hits the floor for the first time
+			// if((collision_ground.collided) && (crate[i].hitGround == 'False')) {									
+			// 	crate[i].hitGround = 'True';
+			// 	score += 20;
+			// 	countGround += 1;
+			// 	//If all the crates have hit the floor then add 20 points 
+			// 	//to count the one that was laready on the floor
+			// 	if(countGround === crate.length){
+			// 		score += 20;	
 					// display 'move to next level'
 					// add +1 to level
 					// add +1 to max_crates
 					// load the game with new crates
 					// here the reset comes
 					// go to either game over, next level, exit(timer)			
-				}
-			}									
+				// }
+			// }									
 		}		
 	}	
 }
 
 // text setup for score and lives
-function gameText(){ // REFACTOR 
+function gameText(){ 
 	// display score text
 	document.getElementById('score').innerText = "Score: " + score;
 	document.getElementById('score').style.visibility = 'visible';
@@ -249,7 +239,7 @@ function gameText(){ // REFACTOR
 function keyPressed() {
 	if (keyCode === ENTER || keyCode === RETURN) {// TODO RETURN NEEDED?
 		console.log("enter key press");
-		//Remove matter fuzzball
+		// Remove matter fuzzball
 		// Matter.World.remove(world.fuzzball);
 		// Matter.World.remove(world.launcher);
 		//load a new ball, launcher and elastic_constraint
@@ -263,6 +253,7 @@ function keyPressed() {
 		console.log("space key press");
 		launcher.release(); // NB currently this drops the fuzzball but doesn't "launch" it
 	}
+	// triger the play state of the game
 	if (keyCode === 80){
 		console.log("p key press");
 		//remove start text
@@ -278,13 +269,53 @@ function mouseReleased() {
 	}, 100);
 }
 
+// displays the text at the start state of the game
 function startGame() {	
 	document.getElementById('fuzzball').style.visibility='visible';
 	document.getElementById('start').style.visibility='visible';
 	
 }
 
+// hides the text when 'p' letter is pressed because the game changes to the play status
 function removestartGame() {	
 		document.getElementById('fuzzball').style.visibility='hidden';
 		document.getElementById('start').style.visibility='hidden';
+}
+
+// checks for collision/intersection between a circle body and a rectangle[i] body
+// collision fuzzball-crate
+function circleRect_Intersection(circle, rectIdx){
+	// check if fuzzball has collided with a crate using the Matter.SAT.collides function
+	let collision_fuzzball = Matter.SAT.collides(circle.body, rectIdx.body);			
+	// crate have a propertty called hitfuzz set to false by default
+	// Only add points to score when the crate is hit for the first time			
+	if ((collision_fuzzball.collided) && (rectIdx.hitFuzz == 'False')) {			
+		rectIdx.hitFuzz = 'True';
+		score += 10;				
+	}
+}
+
+// Check for collision between rectangle[i] and rectangle
+// Collision Ground-crate
+function rectRect_Intersection(rectIdx, rect){	
+	let collision_ground = Matter.SAT.collides(rectIdx.body, rect.body);			
+	//The crate has a property called hitGround set to 'false' by default
+	// Only add points to the score when crate[i] hits the floor for the first time
+	if((collision_ground.collided) && (rectIdx.hitGround == 'False')) {									
+		rectIdx.hitGround = 'True';
+		score += 20;
+		countGround += 1;
+		//If all the crates have hit the floor then add 20 points 
+		//to count the one that was laready on the floor
+		if(countGround === crate.length){
+			score += 20;	
+			// display 'move to next level'
+			// add +1 to level
+			// add +1 to max_crates
+			// load the game with new crates
+			// here the reset comes
+			// go to either game over, next level, exit(timer)			
+		}
+	}						
+
 }
