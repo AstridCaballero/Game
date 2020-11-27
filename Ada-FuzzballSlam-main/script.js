@@ -205,13 +205,30 @@ function draw() {
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
 			collision_fuzzball = Matter.SAT.collides(fuzzball.body, crate[i].body);
+			// console.log(collision_fuzzball);
 			// crate have a propertty called hitfuzz set to False by default
 			// Only add points to score when the crate is hit for the first time			
 			if ((collision_fuzzball.collided) && (crate[i].hitFuzz == 'False')) {			
-					crate[i].hitFuzz = 'True';
-					score += 10;				
+				crate[i].hitFuzz = 'True';
+				score += 10;				
 			}
-		}	
+			//Collision Ground-crate
+			collision_ground = Matter.SAT.collides(crate[i].body, ground.body);
+			console.log(collision_ground);
+			//The ground has a property called hitCrate set to 'false' by default
+			// Only add points to the score when crate[i] hits the floor for the first time
+			if((collision_ground.collided) && (crate[i].hitGround == 'False')) {
+				// console.log(crate[i]);
+				if(crate[i-1].hitGround == 'False' && crate[i-2].hitGround == 'False'){
+					//don't add score yet									
+					score += 0;
+				} else {					
+					crate[i].hitGround = 'True';
+					score += 20;
+				}
+				
+			}			
+		}
 		
 	}
 	
