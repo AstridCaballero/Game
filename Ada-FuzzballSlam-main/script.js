@@ -64,8 +64,8 @@ function get_random(min, max) {
 }
 
 function hittrack() { // this won't work until we associate it with a collision event
-	hittrack.setVolume(0.2);
-	if(hittrack.isPlaying()) {
+	hit.setVolume(0.2);
+	if(hit.isPlaying()) {
 		hit.stop();
 		hit.play();
 	} else {
@@ -75,7 +75,7 @@ function hittrack() { // this won't work until we associate it with a collision 
 
 function audiotrack() { //this works and there is now an off/on button outside the viewport 
 	if(music.isPlaying()) {
-		console.log("starting audio");
+		console.log("stopping audio");
 		music.stop();
 	} else {
 		music.setVolume(0.15);
@@ -115,9 +115,7 @@ function setup() {
 	let options = {
 		mouse: vp_mouse,
 		// will pick only the fuzzball, not the crate(s)		
-		collisionFilter: {
-			mask: defaultCategory | Category2 //EDIT
-		}
+
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
@@ -128,7 +126,7 @@ function setup() {
 	leftwall = new c_ground(-15, vp_height/2, 20, vp_height, "leftwall");
 	rightwall = new c_ground(vp_width+15, vp_height/2, 20, vp_height, "rightwall");
 
-	fuzzball = new c_fuzzball(200, vp_height-100, 60); // create a fuzzball object
+	fuzzball = new c_fuzzball(200, vp_height-100, 60, "fuzzball"); // create a fuzzball object
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
@@ -277,7 +275,7 @@ function keyPressed() {
 		//load a new ball, launcher and elastic_constraint
 		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
 		launcher = new c_launcher(200, vp_height-100, fuzzball.body);
-		launcher.attach(fuzzball.body);	//ataches a body (in this case fuzzball) to the launcher object 
+		launcher.attach(fuzzball.body);	//attaches a body (in this case fuzzball) to the launcher object 
 		// noLoop(); // stops the draw cycle, the result is a frozen image	
 	}
 
