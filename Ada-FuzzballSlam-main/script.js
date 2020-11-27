@@ -32,7 +32,7 @@ var collision_fuzzball;
 var countGround = 0;
 
 // variable to keep track of the state of the game
-var gameState = 'start';;
+var gameState = 'start';
 
 
 function apply_velocity() {
@@ -126,12 +126,12 @@ function setup() {
 	leftwall = new c_ground(-15, vp_height/2, 20, vp_height, "leftwall");
 	rightwall = new c_ground(vp_width+15, vp_height/2, 20, vp_height, "rightwall");
 
-	fuzzball = new c_fuzzball(200, vp_height-100, 60, "fuzzball"); // create a fuzzball object
+	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
 		// last crate in the array is the crate at the bottom of the pile of crates to start the game
-		// so lets set that one to hitGround = true before checking for collisions
+		// so lets set that one to "hitGround = true" before checking for collisions
 		if (i == max_crates - 1){
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
 			crate[i].hitGround ='True';
@@ -143,7 +143,7 @@ function setup() {
 	} 
 
 	//create a launcher object using the fuzzball body
-	launcher = new c_launcher(200, vp_height-100, fuzzball.body);
+	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
 
 	frameRate(60);
 }
@@ -182,14 +182,14 @@ function draw() {
 	if(gameState === 'start'){
 		startGame()
 		// noStroke();
-		// gameText();
+		//gameText();
 		// //display message to play the game
 		// fill(255,255,255);
 		// noStroke();
 		// rect((vp_width/2)- 15, (vp_height/2) - 6 , 250, 50, 20);
 		// fill(0,0,0);
 		// textSize(32);
-		// text("press p to play ", (vp_width/2) -120, vp_height/2);		
+		text("press p to play ", (vp_width/2) -120, vp_height/2);		
 		}		
 	else {			
 		// is game status is 'play' then load the crate, fuzzball and launcher			
@@ -245,7 +245,7 @@ function draw() {
 	}	
 }
 
-// text setup for score and lives
+//text setup for score and lives
 function gameText(){ // REFACTOR 
 	//displays the score
 	fill(255,255,255);
@@ -272,8 +272,8 @@ function keyPressed() {
 		// Matter.World.remove(world.fuzzball);
 		// Matter.World.remove(world.launcher);
 		//load a new ball, launcher and elastic_constraint
-		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
-		launcher = new c_launcher(200, vp_height-100, fuzzball.body);
+		fuzzball = new c_fuzzball(250, vp_height-150, 60);		
+		launcher = new c_launcher(250, vp_height-150, fuzzball.body);
 		launcher.attach(fuzzball.body);	//attaches a body (in this case fuzzball) to the launcher object 
 		// noLoop(); // stops the draw cycle, the result is a frozen image	
 	}
