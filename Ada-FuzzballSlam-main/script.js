@@ -20,6 +20,10 @@ var fbImg;
 var crImg;
 var lnchImg;
 
+//musical variables
+var music;
+var hit;
+
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
@@ -58,12 +62,37 @@ function get_random(min, max) {
 	return Math.floor(Math.random() * (max - min) + min) // the max is exclusive and the min is inclusive
 }
 
+function hittrack() { // this won't work until we associate it with a collision event
+	hittrack.setVolume(0.2);
+	if(hittrack.isPlaying()) {
+		hit.stop();
+		hit.play();
+	} else {
+		hit.play();
+	}
+}
+
+function audiotrack() { //this works and there is now an off/on button outside the viewport 
+	if(music.isPlaying()) {
+		console.log("starting audio");
+		music.stop();
+	} else {
+		music.setVolume(0.15);
+		console.log("starting audio");
+		music.loop();
+	}
+}
+
 function preload() {
+	//images
 	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");
 	fbImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');
 	crImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');
 	lnchImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
-	
+
+	//music/audio
+	music = loadSound("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/AmbientLoop.mp3");
+	hit = loadSound("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Hit.mp3");
 }
 
 function setup() {
@@ -94,9 +123,9 @@ function setup() {
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
 	
-	ground = new c_ground(vp_width/2, vp_height-30, vp_width, 20); // create a ground object
-	leftwall = new c_ground(0, vp_height/2, 20, vp_height);
-	rightwall = new c_ground(vp_width, vp_height/2, 20, vp_height);
+	ground = new c_ground(vp_width/2, vp_height-30, vp_width, 20, "ground"); // create a ground object
+	leftwall = new c_ground(-15, vp_height/2, 20, vp_height, "leftwall");
+	rightwall = new c_ground(vp_width+15, vp_height/2, 20, vp_height, "rightwall");
 
 	fuzzball = new c_fuzzball(200, vp_height-100, 60); // create a fuzzball object
 
@@ -127,8 +156,8 @@ function paint_assets() {
 	for (let i = 0; i < crate.length; i++){ // Loop through the crate array and show each
 		crate[i].show()
 	}
-	 //show the launcher indicator
-	launcher.show();
+
+	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
 		
 	
@@ -223,7 +252,7 @@ function keyPressed() {
 
 	if (keyCode === 32) {
 		console.log("space key press");
-		launcher.release(); // currently this drops the fuzzball but doesn't "launch" it
+		launcher.release(); // NB currently this drops the fuzzball but doesn't "launch" it
 	}
 	if (keyCode === 80){
 		console.log("p key press");
