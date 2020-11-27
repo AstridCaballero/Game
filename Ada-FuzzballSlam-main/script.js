@@ -180,16 +180,7 @@ function draw() {
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
 	if(gameState === 'start'){
-		startGame()
-		// noStroke();
-		// gameText();
-		// //display message to play the game
-		// fill(255,255,255);
-		// noStroke();
-		// rect((vp_width/2)- 15, (vp_height/2) - 6 , 250, 50, 20);
-		// fill(0,0,0);
-		// textSize(32);
-		// text("press p to play ", (vp_width/2) -120, vp_height/2);		
+		startGame()				
 		}		
 	else {			
 		// is game status is 'play' then load the crate, fuzzball and launcher			
@@ -209,12 +200,11 @@ function draw() {
 		noStroke();
 		gameText();				
 
-		// REFACTOR?
+		// REFACTOR!
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-			collision_fuzzball = Matter.SAT.collides(fuzzball.body, crate[i].body);
-			// console.log(collision_fuzzball);
+			collision_fuzzball = Matter.SAT.collides(fuzzball.body, crate[i].body);			
 			// crate have a propertty called hitfuzz set to False by default
 			// Only add points to score when the crate is hit for the first time			
 			if ((collision_fuzzball.collided) && (crate[i].hitFuzz == 'False')) {			
@@ -247,21 +237,12 @@ function draw() {
 
 // text setup for score and lives
 function gameText(){ // REFACTOR 
-	//displays the score
-	fill(255,255,255);
-	noStroke();
-	rect(770, 30, 170, 50, 10);// last parameter rounds the corners of the rectangle
-	fill(0,0,0);
-	textSize(32);
-	// textAlign(CENTER);
-	text("Score: " + score , 700, 40);	
-
-	// displays lives	
-	fill(255,255,255);
-	noStroke();
-	rect(108, 30, 180, 50, 10);
-	fill(0,0,0);
-	text("Lives left " + lives, 30, 40);	
+	// display score text
+	document.getElementById('score').innerText = "Score: " + score;
+	document.getElementById('score').style.visibility = 'visible';
+	// display lives text
+	document.getElementById('lives').innerText = "Lives: " + lives;
+	document.getElementById('lives').style.visibility = 'visible';
 }
 
 
@@ -284,8 +265,10 @@ function keyPressed() {
 	}
 	if (keyCode === 80){
 		console.log("p key press");
-		gameState = 'play';
-		console.log(gameState);
+		//remove start text
+		removestartGame();
+		//change update state
+		gameState = 'play';		
 	}
 }
 
@@ -295,6 +278,13 @@ function mouseReleased() {
 	}, 100);
 }
 
-function startGame() {
+function startGame() {	
+	document.getElementById('fuzzball').style.visibility='visible';
 	document.getElementById('start').style.visibility='visible';
+	
+}
+
+function removestartGame() {	
+		document.getElementById('fuzzball').style.visibility='hidden';
+		document.getElementById('start').style.visibility='hidden';
 }
