@@ -139,8 +139,7 @@ function setup() {
 		}
 		else {
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
-		}
-				
+		}				
 	} 
 
 	//create a launcher object using the fuzzball body
