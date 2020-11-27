@@ -16,8 +16,6 @@ var launcher;
 
 //variables related to the images
 var img;
-var fbImg;
-var crImg;
 var lnchImg;
 
 //musical variables
@@ -83,11 +81,8 @@ function audiotrack() { //this works and there is now an off/on button outside t
 }
 
 function preload() {
-	//images
-	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");
-	fbImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');
-	crImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');
-	lnchImg = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
+	//Load background
+	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");	
 
 	//music/audio
 	music = loadSound("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/AmbientLoop.mp3");
@@ -316,6 +311,5 @@ function rectRect_Intersection(rectIdx, rect){
 			// here the reset comes
 			// go to either game over, next level, exit(timer)			
 		}
-	}						
-
+	}	
 }
