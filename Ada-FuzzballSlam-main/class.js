@@ -16,6 +16,8 @@ class c_launcher {
         // create the constraint 
         this.launch = Matter.Constraint.create(options);
         Matter.World.add(world, this.launch); // add to the matter world
+        //image part of the class instead of a global variable
+        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
     }
     release() {
         //release the constrained body by setting it to null
@@ -32,12 +34,13 @@ class c_launcher {
             translate((posA.x-50), posA.y);
             line(posA.x, posA.y, posB.x, posB.y); //draw a line between the two points
             imageMode(CENTER);
-            image(lnchImg, 0, 0);
+            //image part of the class instead of a global variable 
+            image(this.img, 0, 0);
         pop();    
             
         }
     }
-
+    // method to attach the launcher to the fuzzball
     attach(body) {
         this.launch.bodyB = body;
     }
@@ -91,7 +94,8 @@ class c_crate {
         this.width = width;
         this.height = height;
         this.hitFuzz = 'False';        
-        this.hitGround = 'False';        
+        this.hitGround = 'False'; 
+        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');       
     }
 
     
@@ -108,7 +112,8 @@ class c_crate {
             imageMode(CENTER); // switch centre to be centre rather than left, top
             translate(pos.x, pos.y);
             rotate(angle);
-            image(crImg, 0, 0, this.width, this.height)
+            //image part of the class instead of a global variable 
+            image(this.img, 0, 0, this.width, this.height)
         pop();
     }
 }
@@ -129,7 +134,8 @@ class c_fuzzball {
         this.x = x;
         this.y = y;
         this.diameter = diameter;   
-        this.count = 0;     
+        this.count = 0;   
+        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');          
     }
 
     body() {
@@ -142,11 +148,10 @@ class c_fuzzball {
 
         push(); // p5 translation
             translate(pos.x, pos.y);
-            rotate(angle);
-            //fill("#ffffff");
+            rotate(angle);           
             imageMode(CENTER); // switch centre to be centre rather than left, top
-            //make fbImg part of this function instead of a global variable
-            image(fbImg, 0, 0, this.diameter, this.diameter);
+            //image part of the class instead of a global variable            
+            image(this.img, 0, 0, this.diameter, this.diameter);
         pop();
     }
 }
