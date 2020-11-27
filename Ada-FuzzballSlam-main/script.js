@@ -78,6 +78,7 @@ function setup() {
 
 
 	// enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
+	// stops user from pulling outside the fuzzball
 	let vp_mouse = Matter.Mouse.create(viewport.elt);
 	vp_mouse.pixelRatio = pixelDensity(); // update the pixel ratio with the p5 density value this supports
 	//retina screens, etc
@@ -105,8 +106,6 @@ function setup() {
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(200, vp_height-100, fuzzball.body);
-
-	collision_ground = Matter.SAT.collides(fuzzball.body, ground.body);
 
 	frameRate(60);
 }
