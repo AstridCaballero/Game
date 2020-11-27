@@ -29,6 +29,7 @@ var score = 0;
 var lives = 3;
 var collision_ground;
 var collision_fuzzball;
+var countGround = 0;
 
 // variable to keep track of the state of the game
 var gameState = 'start';;
@@ -129,7 +130,17 @@ function setup() {
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
-		crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);		
+		// last crate in the array is the crate at the bottom of the pile of crates to start the game
+		// so lets set that one to hitGround = true before checking for collisions
+		if (i == max_crates - 1){
+			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+			crate[i].hitGround ='True';
+			countGround += 1;
+		}
+		else {
+			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+		}
+				
 	} 
 
 	//create a launcher object using the fuzzball body
@@ -211,25 +222,25 @@ function draw() {
 				score += 10;				
 			}
 			//Collision Ground-crate
-			collision_ground = Matter.SAT.collides(crate[i].body, ground.body);
-			console.log(collision_ground);
+			collision_ground = Matter.SAT.collides(crate[i].body, ground.body);			
 			//The ground has a property called hitCrate set to 'false' by default
 			// Only add points to the score when crate[i] hits the floor for the first time
-			if((collision_ground.collided) && (crate[i].hitGround == 'False')) {
-				// console.log(crate[i]);
-				if(crate[i-1].hitGround == 'False' && crate[i-2].hitGround == 'False'){
-					//don't add score yet									
-					score += 0;
-				} else {					
-					crate[i].hitGround = 'True';
-					score += 20;
+			if((collision_ground.collided) && (crate[i].hitGround == 'False')) {									
+				crate[i].hitGround = 'True';
+				score += 20;
+				countGround += 1;
+				//If all the crates have hit the floor then add 20 points 
+				//to count the one that was laready on the floor
+				if(countGround === crate.length){
+					score += 20;	
+					// display 'move to next level'
+					// add +1 to level
+					// add +1 to max_crates
+					// load the game with new crates			
 				}
-				
-			}			
-		}
-		
-	}
-	
+			}									
+		}		
+	}	
 }
 
 // text setup for score and lives
@@ -281,3 +292,4 @@ function mouseReleased() {
 		launcher.release();
 	}, 100);
 }
+
