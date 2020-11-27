@@ -90,9 +90,8 @@ class c_crate {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.hitFuzz = 'False';
-        // this.countFuzz = 0;
-        this.hitGround = 'False';
+        this.hitFuzz = 'False';        
+        this.hitGround = 'False';        
     }
 
     
