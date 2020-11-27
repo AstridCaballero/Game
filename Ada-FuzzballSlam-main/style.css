@@ -27,4 +27,10 @@ body {
 	top: 0px;
 }
 
+#start {
+	position: absolute;
+	left: 300px;
+	top: 200px;
+	visibility: hidden;
+}
 

@@ -183,15 +183,16 @@ function draw() {
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
 	if(gameState === 'start'){
+		startGame()
 		// noStroke();
-		gameText();
-		//display message to play the game
-		fill(255,255,255);
-		noStroke();
-		rect((vp_width/2)- 15, (vp_height/2) - 6 , 250, 50, 20);
-		fill(0,0,0);
-		textSize(32);
-		text("press p to play ", (vp_width/2) -120, vp_height/2);		
+		// gameText();
+		// //display message to play the game
+		// fill(255,255,255);
+		// noStroke();
+		// rect((vp_width/2)- 15, (vp_height/2) - 6 , 250, 50, 20);
+		// fill(0,0,0);
+		// textSize(32);
+		// text("press p to play ", (vp_width/2) -120, vp_height/2);		
 		}		
 	else {			
 		// is game status is 'play' then load the crate, fuzzball and launcher			
@@ -238,7 +239,9 @@ function draw() {
 					// display 'move to next level'
 					// add +1 to level
 					// add +1 to max_crates
-					// load the game with new crates			
+					// load the game with new crates
+					// here the reset comes
+					// go to either game over, next level, exit(timer)			
 				}
 			}									
 		}		
@@ -295,3 +298,6 @@ function mouseReleased() {
 	}, 100);
 }
 
+function startGame() {
+	document.getElementById('start').style.visibility='visible';
+}
