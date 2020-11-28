@@ -107,24 +107,26 @@ function setup() {
 	//retina screens, etc
 	let options = {
 		mouse: vp_mouse,
-		// will pick only the fuzzball, not the crate(s)		
-
+		collisionFilter: {
+			mask: Category1
+		}
+				
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
 	
-	ground = new c_ground(vp_width/2, vp_height-30, vp_width, 20, "ground"); // create a ground object
-	leftwall = new c_ground(-15, vp_height/2, 20, vp_height, "leftwall");
-	rightwall = new c_ground(vp_width+15, vp_height/2, 20, vp_height, "rightwall");
+	ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175, "ground"); // create a ground object
+	leftwall = new c_ground(-88, vp_height/2, 175, vp_height, "leftwall");
+	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
 
-	fuzzball = new c_fuzzball(200, vp_height-100, 60, "fuzzball"); // create a fuzzball object
+	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
 
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
 		// last crate in the array is the crate at the bottom of the pile of crates to start the game
-		// so lets set that one to hitGround = true before checking for collisions
+		// so lets set that one to "hitGround = true" before checking for collisions
 		if (i == max_crates - 1){
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
 			crate[i].hitGround ='True';
@@ -136,7 +138,7 @@ function setup() {
 	} 
 
 	//create a launcher object using the fuzzball body
-	launcher = new c_launcher(200, vp_height-100, fuzzball.body);
+	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
 
 	frameRate(60);
 }
@@ -242,11 +244,12 @@ function keyPressed() {
 		launcher.attach(fuzzball.body);	//attaches a body (in this case fuzzball) to the launcher object 			
 	}
 
-	if (keyCode === 32) {
-		console.log("space key press");
-		launcher.release(); // NB currently this drops the fuzzball but doesn't "launch" it
-	}
-	// triger the play state of the game
+	// if (keyCode === 32) {
+	// 	console.log("space key press");
+	// 	launcher.release(); // This is no longer necessary.
+	// }
+
+	// trigger the play state of the game
 	if (keyCode === 80){
 		console.log("p key press");
 		//remove start text
@@ -256,10 +259,12 @@ function keyPressed() {
 	}
 }
 
-function mouseReleased() {
+function mouseClicked() { 
+	if(elastic_constraint.body !== null) {
 	setTimeout(() => {
 		launcher.release();		
 	}, 100);	
+}
 }
 
 // displays the text at the start state of the game
