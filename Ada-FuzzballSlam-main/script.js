@@ -94,6 +94,59 @@ function setup() {
 	viewport = createCanvas(vp_width, vp_height); // set the viewport (canvas) size
 	viewport.parent("viewport_container"); // move the canvas so it's inside the target div
 	
+	// will reset when clicking a button
+	resetSketch()
+	var button = createButton("reset");
+	button.mousePressed(resetSketch);
+
+	// //enable the matter engine
+	// engine = Matter.Engine.create();
+	// world = engine.world;
+	// body = Matter.Body;	
+
+
+	// // enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
+	// // stops user from pulling outside the fuzzball
+	// let vp_mouse = Matter.Mouse.create(viewport.elt);
+	// vp_mouse.pixelRatio = pixelDensity(); // update the pixel ratio with the p5 density value this supports
+	// //retina screens, etc
+	// let options = {
+	// 	mouse: vp_mouse,
+	// 	collisionFilter: {
+	// 		mask: Category1
+	// 	}
+				
+	// }
+
+	// // see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
+	// elastic_constraint = Matter.MouseConstraint.create(engine, options);
+	// Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
+	
+	// ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175, "ground"); // create a ground object
+	// leftwall = new c_ground(-88, vp_height/2, 175, vp_height, "leftwall");
+	// rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
+
+	// fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
+
+	// //loop through each of the crate indexes
+	// for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
+	// 	// last crate in the array is the crate at the bottom of the pile of crates to start the game
+	// 	// so lets set that one to "hitGround = true" before checking for collisions
+	// 	if (i == max_crates - 1){
+	// 		crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+	// 		crate[i].hitGround ='True';
+	// 		countGround += 1;
+	// 	}
+	// 	else {
+	// 		crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+	// 	}				
+	// } 
+	// //create a launcher object using the fuzzball body
+	// launcher = new c_launcher(250, vp_height-150, fuzzball.body);
+	// frameRate(60);
+}
+
+function resetSketch(){
 	//enable the matter engine
 	engine = Matter.Engine.create();
 	world = engine.world;
@@ -136,12 +189,11 @@ function setup() {
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
 		}				
 	} 
-
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
-
 	frameRate(60);
-}
+
+};
 
 
 function paint_background() {
