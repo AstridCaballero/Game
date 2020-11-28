@@ -95,55 +95,9 @@ function setup() {
 	viewport.parent("viewport_container"); // move the canvas so it's inside the target div
 	
 	// will reset when clicking a button
-	resetSketch()
-	var button = createButton("reset");
-	button.mousePressed(resetSketch);
-
-	// //enable the matter engine
-	// engine = Matter.Engine.create();
-	// world = engine.world;
-	// body = Matter.Body;	
-
-
-	// // enable the 'matter' mouse controller and attach it to the viewport object using p5s elt property
-	// // stops user from pulling outside the fuzzball
-	// let vp_mouse = Matter.Mouse.create(viewport.elt);
-	// vp_mouse.pixelRatio = pixelDensity(); // update the pixel ratio with the p5 density value this supports
-	// //retina screens, etc
-	// let options = {
-	// 	mouse: vp_mouse,
-	// 	collisionFilter: {
-	// 		mask: Category1
-	// 	}
-				
-	// }
-
-	// // see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
-	// elastic_constraint = Matter.MouseConstraint.create(engine, options);
-	// Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
-	
-	// ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175, "ground"); // create a ground object
-	// leftwall = new c_ground(-88, vp_height/2, 175, vp_height, "leftwall");
-	// rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
-
-	// fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
-
-	// //loop through each of the crate indexes
-	// for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
-	// 	// last crate in the array is the crate at the bottom of the pile of crates to start the game
-	// 	// so lets set that one to "hitGround = true" before checking for collisions
-	// 	if (i == max_crates - 1){
-	// 		crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
-	// 		crate[i].hitGround ='True';
-	// 		countGround += 1;
-	// 	}
-	// 	else {
-	// 		crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
-	// 	}				
-	// } 
-	// //create a launcher object using the fuzzball body
-	// launcher = new c_launcher(250, vp_height-150, fuzzball.body);
-	// frameRate(60);
+	resetSketch();	
+	// var button_reset = createButton("reset");
+	// button_reset.mousePressed(resetSketch); // when clicking button_reset the function resetScketch will run
 }
 
 function resetSketch(){
@@ -162,8 +116,7 @@ function resetSketch(){
 		mouse: vp_mouse,
 		collisionFilter: {
 			mask: Category1
-		}
-				
+		}				
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
@@ -223,8 +176,8 @@ function draw() {
 	Matter.Engine.update(engine); // run the matter engine update
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
-	if(gameState === 'start'){
-		textStart()				
+	if(gameState === 'start'){		
+		textStart();				
 		}		
 	else {			
 		// is game status is 'play' then load the crate, fuzzball and launcher			
@@ -242,7 +195,7 @@ function draw() {
 					
 		}
 		// displays score and lives		
-		gameText();	
+		gameText();	 
 
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
@@ -251,10 +204,10 @@ function draw() {
 			//Collision Ground-crate
 			rectRect_Intersection(crate[i], ground);														
 		}	
-		if(lives === 1){
-			if(countGround == 3){
-				levelUp();
-				noLoop
+		if(lives === 0){
+			if(countGround == max_crates){
+				// levelUp();				
+				resetSketch();
 			}
 			else{
 				setTimeout(() => {
@@ -263,8 +216,9 @@ function draw() {
 			}
 			
 		}	
-		else if(countGround == 3){
-			levelUp();			
+		else if(countGround == max_crates){
+			// levelUp();
+			resetSketch();
 		}		
 	}	
 }
@@ -272,11 +226,27 @@ function draw() {
 // text setup for score and lives
 function gameText(){ 
 	// display score text
-	document.getElementById('score').innerText = "Score: " + score;
-	document.getElementById('score').style.visibility = 'visible';
+	fill(255,255,255);
+	noStroke();
+	rect(770, 30, 170, 50, 10);// last parameter rounds the corners of the rectangle
+	fill(0,0,0);
+	textFont('Anton');
+	textSize(32);		
+	text("Score: " + score , 710, 42);	
+
 	// display lives text
-	document.getElementById('lives').innerText = "Lives: " + lives;
-	document.getElementById('lives').style.visibility = 'visible';
+	fill(255,255,255);
+	noStroke();
+	rect(108, 30, 180, 50, 10);
+	fill(0,0,0);
+	text("Lives left " + lives, 40, 42);	
+	
+	// displays level
+	fill(255,255,255);
+	noStroke();
+	rect(vp_width/2 - 20, 30, 170, 50, 10);// last parameter rounds the corners of the rectangle
+	fill(0,0,0);
+	text("level " + level, vp_width/2 - 60, 40);
 }
 
 
@@ -293,8 +263,8 @@ function gameText(){
 // }
 
 function keyPressed() {
-	if (keyCode === ENTER || keyCode === RETURN) {// TODO RETURN NEEDED?
-		console.log("enter key press");
+	if (keyCode === 32) {
+		console.log("space key press");
 		// reduce lives
 		lives -= 1;
 		// Remove matter fuzzball
@@ -305,16 +275,10 @@ function keyPressed() {
 		launcher.attach(fuzzball.body);	//attaches a body (in this case fuzzball) to the launcher object 			
 	}
 
-	// if (keyCode === 32) {
-	// 	console.log("space key press");
-	// 	launcher.release(); // This is no longer necessary.
-	// }
 
 	// trigger the play state of the game
-	if (keyCode === 80){
-		console.log("p key press");
-		//remove start text
-		removesTextStart();
+	if (keyCode === ENTER || keyCode === RETURN){
+		console.log("enter key press");		
 		//change update state
 		gameState = 'play';		
 	}
@@ -329,17 +293,18 @@ function mouseClicked() {
 }
 
 // displays the text at the start state of the game
-function textStart() {	
-	document.getElementById('bigText').style.visibility='visible';
-	document.getElementById('start').style.visibility='visible';
-	
+function textStart() {
+	// display name of game
+	textFont('Bungee Shade');
+	textSize(52);	
+	text("fuzzball", vp_width/2 - 160, vp_height/2 - 40 );		
+
+	// display instruction to start game
+	textFont('Anton');
+	textSize(32);		
+	text("hit enter to play", vp_width/2 - 100, vp_height/2 + 10 );
 }
 
-// hides the text when 'p' letter is pressed because the game changes to the play status
-function removesTextStart() {	
-		document.getElementById('bigText').style.visibility='hidden';
-		document.getElementById('start').style.visibility='hidden';
-}
 
 // checks for collision/intersection between a circle body and a rectangle[i] body
 // collision fuzzball-crate
@@ -367,8 +332,7 @@ function rectRect_Intersection(rectIdx, rect){
 		//If all the crates have hit the floor then add 20 points 
 		//to count the one that was laready on the floor
 		if(countGround === crate.length){
-			score += 20;	
-			// Text("test", 300, 300);	
+			score += 20;				
 			// // display 'move to next level'
 			// levelUp();
 			// add +1 to level
@@ -385,9 +349,7 @@ function rectRect_Intersection(rectIdx, rect){
 		level += 1;
 		max_crates += 1;
 		//reset graphics		
-		// display next level text
-	 	document.getElementById('bigText').innerText = "Level " + level ;
-		document.getElementById('bigText').style.visibility='visible';
+		// display next level text 	
 		 	
 	}, 5000);
 	 
