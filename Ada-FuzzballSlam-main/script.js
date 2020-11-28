@@ -107,17 +107,19 @@ function setup() {
 	//retina screens, etc
 	let options = {
 		mouse: vp_mouse,
-		// will pick only the fuzzball, not the crate(s)		
-
+		collisionFilter: {
+			mask: Category1
+		}
+				
 	}
 
 	// see docs on https://brm.io/matter-js/docs/classes/Constraint.html#properties
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
 	
-	ground = new c_ground(vp_width/2, vp_height-30, vp_width, 20, "ground"); // create a ground object
-	leftwall = new c_ground(-15, vp_height/2, 20, vp_height, "leftwall");
-	rightwall = new c_ground(vp_width+15, vp_height/2, 20, vp_height, "rightwall");
+	ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175, "ground"); // create a ground object
+	leftwall = new c_ground(-88, vp_height/2, 175, vp_height, "leftwall");
+	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
 
 	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
 
@@ -246,8 +248,9 @@ function keyPressed() {
 
 	// if (keyCode === 32) {
 	// 	console.log("space key press");
-	// 	launcher.release(); // NB currently this drops the fuzzball but doesn't "launch" it
+	// 	launcher.release(); // This is no longer necessary.
 	// }
+
 	// trigger the play state of the game
 	if (keyCode === 80){
 		console.log("p key press");
@@ -258,10 +261,12 @@ function keyPressed() {
 	}
 }
 
-function mouseReleased() { 
+function mouseClicked() { 
+	if(elastic_constraint.body !== null) {
 	setTimeout(() => {
 		launcher.release();
 	}, 100);
+}
 }
 
 // displays the text at the start state of the game
