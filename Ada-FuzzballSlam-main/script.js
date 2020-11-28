@@ -199,11 +199,20 @@ function draw() {
 			//Collision Ground-crate
 			rectRect_Intersection(crate[i], ground);														
 		}	
-		if(lives === 0){
-			gameOver();
+		if(lives === 1){
+			if(countGround == 3){
+				levelUp();
+				noLoop
+			}
+			else{
+				setTimeout(() => {
+					gameOver();
+				}, 12000);
+			}
+			
 		}	
-		if(countGround == 3){
-			levelUp();
+		else if(countGround == 3){
+			levelUp();			
 		}		
 	}	
 }
