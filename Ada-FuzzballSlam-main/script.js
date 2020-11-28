@@ -26,6 +26,7 @@ var hit;
 var score = 0;
 var lives = 3;
 var countGround = 0;
+var timer;
 
 // variable to keep track of the state of the game
 var gameState = 'start';
@@ -172,10 +173,10 @@ function draw() {
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
 	if(gameState === 'start'){
-		startGame()				
+		startGame();				
 		}		
 	else {			
-		// is game status is 'play' then load the crate, fuzzball and launcher			
+		// if game status is 'play' then load the crate, fuzzball and launcher			
 		paint_assets(); // paint the assets		
 		
 		if(elastic_constraint.body !== null) {				
@@ -190,7 +191,9 @@ function draw() {
 		}
 		// displays the score
 		noStroke();
-		gameText();				
+		gameText();	
+		gameTimer(); 
+						
 
 		// REFACTOR!
 		// check collision to get points
@@ -230,6 +233,23 @@ function gameText(){
 	// display lives text
 	document.getElementById('lives').innerText = "Lives: " + lives;
 	document.getElementById('lives').style.visibility = 'visible';
+}
+
+function gameTimer(){
+	timeLeft >= 30;
+	//displays a countdown timer until the end of the round
+	document.getElementById('timer').innerText = timer;
+	document.getElementById('timer').style.visibility = 'visible';
+	if(frameRate % 60 == 0 && timer > 0) {
+		timeLeft --
+	} 
+	console.log(timer);
+	// else { (timer == 0)
+	// 	return ("Time's Up! Try Again!", width/2, height/2);
+	// }
+	// console.log(timer);
+
+
 }
 
 
