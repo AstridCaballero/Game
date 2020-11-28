@@ -156,6 +156,11 @@ class c_fuzzball {
         return this.body;
     }
 
+    // will remove the body of a fuzzball from the world. THis is important before creating a new fuzzball
+    remove(){
+        Matter.World.remove(world, this.body);
+    }
+
     show() {
         let pos = this.body.position;
         let angle = this.body.angle;
