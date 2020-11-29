@@ -28,17 +28,12 @@ body {
 }
 
 #start {
-	display: flex;
 	position: absolute;
 	left: 580px;
 	top: 300px;
 	visibility: hidden;
 }
-#bigText {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+#fuzzball {
 	position: absolute;
 	left: 480px;
 	top: 200px;
@@ -58,11 +53,4 @@ body {
 	top: 10px;
 	visibility: hidden;
 }
-
-/* #timer {
-	position: absolute;
-	left: 600px;
-	top: 10px;
-	visibility: hidden;
-} */
 

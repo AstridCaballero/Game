@@ -11,6 +11,7 @@
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js" integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA==" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.1/matter.min.js" integrity="sha512-zkr6K5aibGz5uIkC28VJQrfg/YDadqtqZPzXiBhUHUSGGqGzmEvK70f+yjV/qCRT21Zsqnc0ABGt5GUakGh16g==" crossorigin="anonymous"></script>
 
 		<script src="class.js"></script>
@@ -21,25 +22,19 @@
 	<body>
 		<div class="container">
 			<div id="viewport_container">
-				<!-- game viewport goes here-->
-				<button onclick="audiotrack();">Start/Stop</button>
+				<!-- game viewport goes here-->				
 			</div>
 			<div class="controller">
 			</div>
 		</div>
 
-		<script src="script.js"></script>
+		<script src="script.js"></script>	
 
-		<div>
-			<div id = "bigText"class = "text_title">Fuzzball</div>	
-				br		
-			<div id = "start" class = "text_default">press p to play</div>
-		</div>
-		<div>
-			<div id = "score" class = "text_default"> </div>
-			<div id = "lives" class = "text_default"> </div>
-			<!--<div id = "timer" class = "text_default"></div>-->
-		</div>		
+		<button onclick="audiotrack();">Start/Stop</button>
+		<!--<button onclick="apply_velocity();">Apply Velocity</button>
+		<button onclick="apply_angularvelocity();">Apply Angular Velocity</button>
+		<button onclick="apply_force();">Apply Force</button>-->
+		
 		
 	</body>
 </html>
