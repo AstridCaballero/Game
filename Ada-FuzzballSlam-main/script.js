@@ -98,12 +98,12 @@ function setup() {
 	viewport.parent("viewport_container"); // move the canvas so it's inside the target div
 	
 	// will reset when clicking a button
-	resetSketch();	
+	reset_sketch();	
 	// var button_reset = createButton("reset");
-	// button_reset.mousePressed(resetSketch); // when clicking button_reset the function resetScketch will run
+	// button_reset.mousePressed(reset_sketch); // when clicking button_reset the function resetScketch will run
 }
 
-function resetSketch(){
+function reset_sketch(){
 	//enable the matter engine
 	engine = Matter.Engine.create();
 	world = engine.world;
@@ -176,7 +176,7 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-	gameText();	// shows score, level and lifes
+	game_text();	// shows score, level and lifes
 	// add obstacle from level 2
 	if (level > 1){
 		obstacle.show();				
@@ -191,13 +191,14 @@ function draw() {
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
 	if(gameState === 'start'){		
-		textStart();				
+		text_start();				
 		}	
 	else if (gameState == 'gameover'){
-		textGameOver();
+		text_gameover();
 	}	
 	else if (gameState == 'levelup'){			
-		textLevelUp();
+		text_levelup();
+		// update game state to be able to continue playing
 		setTimeout(() => {			
 			gameState = 'play';	
 		}, 3000);
@@ -205,25 +206,15 @@ function draw() {
 	}
 	else {						
 		// is game status is 'play' then load the crate, fuzzball and launcher			
-		paint_assets(); // paint the assets	
+		paint_assets(); 
 		
 		// check collision to get points
-		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
-			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-			crateFuzz_intersection(fuzzball, crate[i]);	
-			//Collision Ground-crate			
-			crateGround_Intersection(crate[i], ground);														
-		}
+		get_points();
 		
-		// when level is greater than 1 check if fuzzball hit obstacle and take points away from score
-		if (level > 1){
-			obstacleFuzz_intersection(fuzzball, obstacle);	
-		}
 		// check if fuzzball hit the ground to track next level or gameover		
 		fuzzGround_intersection(fuzzball, ground);			
-		if(fuzzball.hitGround == 'True') {				
-			// console.log(fuzzball.body.speed);
-			// console.log(crate.length);	
+		if(fuzzball.hitGround == 'True') {		
+				
 			// if ball has been launched and has stopped moving
 			if(fuzzball.released = 'True' && fuzzball.body.speed < 0.28){ // body looks static when speed is around 2.7
 				// if body has stopped and there are not more lives then Game over
@@ -231,53 +222,20 @@ function draw() {
 					// if all crates on the floor
 					if (countGround == max_crates){
 						// next level
-						levelUp();
-						// level = level + 1;
-						// lives = 3;
-						// max_crates = max_crates + 1;
-						// countGround = 0;
-						// resetSketch();						
-						// gameState = 'levelup';
+						levelUp();	
 					}
-					else { // not all crates on floor and no more lives
-						// give sometime to display the information
-						setTimeout(() => {
-							// change the state of the game
-							gameState = 'gameover';	
-							level = 1;
-							lives = 3;
-							score = 0;
-							max_crates = 3;	
-							countGround = 0;
-							crate =[];
-							resetSketch();
-						}, 1000);
+					else { // not all crates on floor and no more lives						
+						gameOver();
 					}					
 				}
 				else {					
 					// if not all crates are on the ground
-					if (countGround !== max_crates){					
-						
-						// if fuzzball stopped moving but there are lives left then reset launcher and fuzzball
-						setTimeout(() => {							
-							// Remove matter fuzzball
-							fuzzball.remove();
-							//load a new ball, launcher and elastic_constraint
-							fuzzball = new c_fuzzball(200, vp_height-100, 60);		
-							//attach the new fuzzball back to the launcher
-							launcher.attach(fuzzball.body);
-						}, 5000);
+					if (countGround !== max_crates){
+						reset_launcher();					
 					}
 					else { // if all crates on the floor	
-						// next level						
-						// level = level + 1;
-						// lives = 3;
-						// max_crates = max_crates + 1;	
-						// countGround = 0;
-						// resetSketch();
-						// //update game state				
-						// gameState = 'levelup';	
-						levelUp()	
+						// next level
+						levelUp();	
 					}					
 				}									
 			}
@@ -285,14 +243,14 @@ function draw() {
 	}	
 }
 
-function bigText(info, x, y){
+function big_text(info, x, y){
 	textFont('Bungee Shade');
 	textSize(52);
 	fill("#000000");	
 	text(info, x, y);
  }
 
- function smallText(info, x, y){
+ function small_text(info, x, y){
 	textFont('Anton');
 	textSize(32);	
 	fill("#000000");	
@@ -305,38 +263,38 @@ function text_background(x, y, w, h){
 	rect(x, y, w, h, 10);// last parameter rounds the corners of the rectangle
 }
 // text setup for score and lives
-function gameText(){ 
+function game_text(){ 
 	// display score text	
 	text_background(770, 30, 170, 50);	
-	smallText("Score: " + score, 710, 42);		
+	small_text("Score: " + score, 710, 42);		
 
 	// display lives text
 	text_background(108, 30, 180, 50);		
-	smallText("Lives left " + lives, 40, 42);		
+	small_text("Lives left " + lives, 40, 42);		
 	
 	// displays level
 	text_background(vp_width/2 - 20, 30, 170, 50);
-	smallText("level " + level, vp_width/2 - 60, 40);
+	small_text("level " + level, vp_width/2 - 60, 40);
 }
 
 // displays the text at the start state of the game
-function textStart() {
+function text_start() {
 	// display name of game
-	bigText("fuzzball", vp_width/2 - 160, vp_height/2 - 40);	
+	big_text("fuzzball", vp_width/2 - 160, vp_height/2 - 40);	
 
 	// display instruction to start game
-	smallText("hit enter to play", vp_width/2 - 100, vp_height/2 + 10);	
+	small_text("hit enter to play", vp_width/2 - 100, vp_height/2 + 10);	
 }
 
 // display game over text
-function textGameOver(){			
-	bigText("Game Over", vp_width/2 - 160, vp_height/2 - 40);	
-	smallText("hit enter to restart the game", vp_width/2 - 160, vp_height/2 + 10);		
+function text_gameover(){			
+	big_text("Game Over", vp_width/2 - 160, vp_height/2 - 40);	
+	small_text("hit enter to restart the game", vp_width/2 - 160, vp_height/2 + 10);		
  }
 
- function textLevelUp(){
+ function text_levelup(){
 	 // display level
-	bigText("Level " + level, vp_width/2 - 120, vp_height/2 - 40);
+	big_text("Level " + level, vp_width/2 - 120, vp_height/2 - 40);	
  }
 
 function keyPressed() {
@@ -421,13 +379,50 @@ function fuzzGround_intersection(circle, rect){
 	}
 } 
 
-
 function levelUp(){
 	level = level + 1;
 	lives = 3;
 	max_crates = max_crates + 1;
 	countGround = 0;
-	resetSketch();						
+	reset_sketch();						
 	gameState = 'levelup';
 }
  
+function gameOver(){
+	setTimeout(() => {
+		// change the state of the game
+		gameState = 'gameover';	
+		level = 1;
+		lives = 3;
+		score = 0;
+		max_crates = 3;	
+		countGround = 0;
+		crate =[];
+		reset_sketch();
+	}, 1000);
+}
+
+function reset_launcher(){
+	setTimeout(() => {							
+		// Remove matter fuzzball
+		fuzzball.remove();
+		//load a new ball, launcher and elastic_constraint
+		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
+		//attach the new fuzzball back to the launcher
+		launcher.attach(fuzzball.body);
+	}, 5000);
+}
+
+function get_points(){
+	for (let i = 0; i < crate.length; i++){ // Loop through the crate array
+		// check if fuzzball has collided with a crate using the Matter.SAT.collides function
+		crateFuzz_intersection(fuzzball, crate[i]);	
+		//Collision Ground-crate			
+		crateGround_Intersection(crate[i], ground);														
+	}
+	
+	// when level is greater than 1 check if fuzzball hit obstacle and take points away from score
+	if (level > 1){
+		obstacleFuzz_intersection(fuzzball, obstacle);	
+	}
+}
