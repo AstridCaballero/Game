@@ -136,7 +136,7 @@ class c_fuzzball {
             restitution: 0.90,
             friction: 0.5,
             density: 0.99,
-            frictionAir: 0.005, 
+            frictionAir: 0.005,            
             collisionFilter: {
                 category: Category1
             }          
@@ -150,6 +150,8 @@ class c_fuzzball {
         this.diameter = diameter;   
         this.count = 0;   
         this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');          
+        this.hitGround = 'False';
+        this.released =  'False';
     }
 
     body() {
