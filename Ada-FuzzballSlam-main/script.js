@@ -14,6 +14,9 @@ var rightwall;
 var fuzzball;
 var launcher;
 
+// create obstacle
+var obstacle;
+
 //variables related to the images
 var img;
 
@@ -145,7 +148,12 @@ function resetSketch(){
 		else {
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
 		}				
-	} 		
+	} 
+	
+	// create an obstacle
+	if (level > 1){
+		obstacle = new c_obstacle(get_random(400, 500), get_random(400, 500), 60, 60);
+	}
 	frameRate(60);
 };
 
@@ -169,6 +177,10 @@ function paint_assets() {
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
 	gameText();	// shows score, level and lifes
+	// add obstacle from level 2
+	if (level > 1){
+		obstacle.show();				
+	}
 }
 
 function draw() {
@@ -184,10 +196,7 @@ function draw() {
 	else if (gameState == 'gameover'){
 		textGameOver();
 	}	
-	else if (gameState == 'levelup'){
-		// level = level + 1;
-		// lives = 3;
-		// max_crates = max_crates + 1;		
+	else if (gameState == 'levelup'){			
 		textLevelUp();
 		setTimeout(() => {			
 			gameState = 'play';	
@@ -197,15 +206,19 @@ function draw() {
 	else {						
 		// is game status is 'play' then load the crate, fuzzball and launcher			
 		paint_assets(); // paint the assets	
-
+		
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
 			crateFuzz_intersection(fuzzball, crate[i]);	
 			//Collision Ground-crate			
 			crateGround_Intersection(crate[i], ground);														
-		}	
-
+		}
+		
+		// when level is greater than 1 check if fuzzball hit obstacle and take points away from score
+		if (level > 1){
+			obstacleFuzz_intersection(fuzzball, obstacle);	
+		}
 		// check if fuzzball hit the ground to track next level or gameover		
 		fuzzGround_intersection(fuzzball, ground);			
 		if(fuzzball.hitGround == 'True') {				
@@ -218,12 +231,13 @@ function draw() {
 					// if all crates on the floor
 					if (countGround == max_crates){
 						// next level
-						level = level + 1;
-						lives = 3;
-						max_crates = max_crates + 1;
-						countGround = 0;
-						resetSketch();						
-						gameState = 'levelup';
+						levelUp();
+						// level = level + 1;
+						// lives = 3;
+						// max_crates = max_crates + 1;
+						// countGround = 0;
+						// resetSketch();						
+						// gameState = 'levelup';
 					}
 					else { // not all crates on floor and no more lives
 						// give sometime to display the information
@@ -245,9 +259,9 @@ function draw() {
 					if (countGround !== max_crates){					
 						
 						// if fuzzball stopped moving but there are lives left then reset launcher and fuzzball
-						setTimeout(() => {
+						setTimeout(() => {							
 							// Remove matter fuzzball
-							fuzzball.remove();		
+							fuzzball.remove();
 							//load a new ball, launcher and elastic_constraint
 							fuzzball = new c_fuzzball(200, vp_height-100, 60);		
 							//attach the new fuzzball back to the launcher
@@ -256,13 +270,14 @@ function draw() {
 					}
 					else { // if all crates on the floor	
 						// next level						
-						level = level + 1;
-						lives = 3;
-						max_crates = max_crates + 1;	
-						countGround = 0;
-						resetSketch();
-						//update game state				
-						gameState = 'levelup';		
+						// level = level + 1;
+						// lives = 3;
+						// max_crates = max_crates + 1;	
+						// countGround = 0;
+						// resetSketch();
+						// //update game state				
+						// gameState = 'levelup';	
+						levelUp()	
 					}					
 				}									
 			}
@@ -366,6 +381,17 @@ function crateFuzz_intersection(circle, rectIdx){
 	}
 }
 
+// collision fuzzball-crate
+function obstacleFuzz_intersection(circle, rect){
+	// check if fuzzball has collided with a crate using the Matter.SAT.collides function
+	let collision_obst = Matter.SAT.collides(circle.body, rect.body);			
+	// crate have a propertty called hitfuzz set to false by default
+	// Only add points to score when the crate is hit for the first time			
+	if (collision_obst.collided && score > 0) {
+		score -= 2;				
+	}
+}
+
 // Check for collision between rectangle[i] and rectangle
 // Collision Ground-crate
 function crateGround_Intersection(rectIdx, rect){	
@@ -396,5 +422,12 @@ function fuzzGround_intersection(circle, rect){
 } 
 
 
-
+function levelUp(){
+	level = level + 1;
+	lives = 3;
+	max_crates = max_crates + 1;
+	countGround = 0;
+	resetSketch();						
+	gameState = 'levelup';
+}
  

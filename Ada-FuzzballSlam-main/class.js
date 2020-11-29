@@ -78,9 +78,7 @@ class c_ground {
 
     show() {
         let pos = this.body.position; // create a shortcut alias
-        rectMode(CENTER); // switch centre to be centre rather than left, top
-        //fill("#ffffff"); // set the fill colour
-        //rect(pos.x, pos.y, this.width, this.height) // draw the rectangle 
+        rectMode(CENTER); // switch centre to be centre rather than left
     }
 }
 
@@ -107,11 +105,7 @@ class c_crate {
         this.hitFuzz = 'False';        
         this.hitGround = 'False'; 
         this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');       
-    }
-    
-    remove(){
-        Matter.World.remove(world, this.body);
-    }
+    }  
     
     body() {
         return this.body; //return the created body 
@@ -178,4 +172,23 @@ class c_fuzzball {
             image(this.img, 0, 0, this.diameter, this.diameter);
         pop();
     }
+}
+
+// the c_obstacle class inherits from c_crate and has its own property 'colour'
+// also it has override the method show()
+class c_obstacle extends c_ground{
+    constructor(x, y, width, height){                     
+        super(x, y, width, height);
+        this.colour = '#ff0000'; 
+    } 
+
+    //overriding the c_ground show function
+    show(){          
+        let pos = this.body.position; // create a shortcut alias
+        rectMode(CENTER); // switch centre to be centre rather than left          
+        fill(this.colour);
+        // inherits show() functionality at the same time that is overriden
+        //super.show();   
+        rect(pos.x, pos.y, this.width, this.height);        
+    }    
 }
