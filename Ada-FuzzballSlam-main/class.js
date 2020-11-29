@@ -108,7 +108,10 @@ class c_crate {
         this.hitGround = 'False'; 
         this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');       
     }
-
+    
+    remove(){
+        Matter.World.remove(world, this.body);
+    }
     
     body() {
         return this.body; //return the created body 
