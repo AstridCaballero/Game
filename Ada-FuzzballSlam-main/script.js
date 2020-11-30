@@ -28,8 +28,6 @@ var button;
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
-// test for points to display on screen 
-var pointsGained1;
 
 var countGround = 0;
 // var timer;
@@ -49,8 +47,10 @@ function hittrack() { // this won't work until we associate it with a collision 
 	if(hit.isPlaying()) {
 		hit.stop();
 		hit.play();
+		console.log("hit!");
 	} else {
 		hit.play();
+		console.log("hit!");
 	}
 }
 
@@ -145,7 +145,6 @@ function paint_background() {
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
 	rightwall.show();
-	// button.show();
 }
 
 
@@ -157,7 +156,6 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-	// button.show(); //shows the on/off button for music 
 	game_text();	// shows score, level and lifes
 	// add obstacle from level 2
 	if (level > 1){
