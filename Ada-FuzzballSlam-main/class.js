@@ -210,6 +210,6 @@ class c_obstacle extends c_ground{
         translate(pos.x, pos.y); // takes the x and y of the body and set them as the origin
         rotate(frameCount / 200.0); // rotates the body
         // calls a method within the class
-        this.createStar();  // calls the method createStar() that has been created inside the function         
+        this.createStar();  // calls the method createStar() that has been created inside the function  
     }    
 }

@@ -30,7 +30,7 @@ var button;
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
-var displayScore = false;
+// var displayScore = false;
 var countGround = 0;
 // var timer;
 
@@ -38,6 +38,10 @@ var countGround = 0;
 var gameState = 'start';
 var level = 1;
 
+// variables to be able to display text score +20, +10, -2 
+var start_time_crate;
+var start_time_ground;
+var start_time_obst;
 
 function apply_velocity() {
 	Matter.Body.setVelocity( fuzzball.body, {x: get_random(0, 20), y: get_random(0, 20)*-1});
@@ -207,7 +211,7 @@ function draw() {
 	// check game status
 	// if game status is "start" it will tell the player to start playing	
 	if(gameState === 'start'){		
-		text_start();				
+		text_start();	
 		}	
 	else if (gameState == 'gameover'){
 		music.stop();
@@ -223,10 +227,25 @@ function draw() {
 	}
 	else {						
 		// is game status is 'play' then load the crate, fuzzball and launcher			
-		paint_assets(); 
+		paint_assets(); 				
 		
 		// check collision to get points
 		get_points();
+
+		// Display points when fuzzball hits a crate
+		if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
+			big_text("+ 10", vp_width/2 - 100, vp_height/4);
+		}
+		// Display points when fuzzball hits ground
+		if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
+			big_text("+ 20", vp_width/2 - 100, vp_height/4 + 20);
+		}
+
+		// Display points when fuzzball hits ground
+		if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
+			big_text("- 2", vp_width/2 - 100, vp_height/4 + 40);
+		}
+		
 		
 		// check if fuzzball hit the ground to track next level or gameover		
 		fuzzGround_intersection(fuzzball, ground);			
@@ -294,18 +313,6 @@ function game_text(){
 	small_text("Level " + level, vp_width/2 - 60, 40);
 }
 
-function displayScoreText() {
-	if  ((score += 10) && (displayScore = false)) {
-		// displayScore = true; // this part is not linking in properly 
-		small_text("10 points!", 710, 85);
-		setTimeout(() => {
-			// displayScore = false;
-			console.log("stop displaying score");
-		}, 10000);	
-	} 
-}
-
-
 // displays the text at the start state of the game
 function text_start() {
 	// display name of game
@@ -368,7 +375,8 @@ function crateFuzz_intersection(circle, rectIdx){
 	if ((collision_crate.collided) && (rectIdx.hitFuzz == 'False')) {			
 		rectIdx.hitFuzz = 'True';
 		score += 10;
-		displayScoreText();
+		// display score
+		start_time_crate = frameCount; // get the frame count at the moment of the hit				
 	}
 }
 
@@ -380,7 +388,9 @@ function obstacleFuzz_intersection(circle, rect){
 	// Only add points to score when the crate is hit for the first time			
 	if (collision_obst.collided && score > 0) {
 		score -= 2;
-		hit.play();				
+		hit.play();		
+		// display score
+		start_time_obst = frameCount; // get the frame count at the moment of the hit			
 	}
 }
 
@@ -394,10 +404,14 @@ function crateGround_Intersection(rectIdx, rect){
 		rectIdx.hitGround = 'True';
 		score += 20;
 		countGround += 1;
+		// display score
+		start_time_ground = frameCount; // get the frame count at the moment of the hit
 		//If all the crates have hit the floor then add 20 points 
-		//to count the one that was laready on the floor
+		//to count the one that was already on the floor
 		if(countGround === crate.length){
 			score += 20;
+			// display score
+			start_time_ground = frameCount; // get the frame count at the moment of the hit
 									
 		}
 	}	
@@ -451,8 +465,7 @@ function reset_launcher(){
 function get_points(){	
 	for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 		// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-		crateFuzz_intersection(fuzzball, crate[i]);			
-
+		crateFuzz_intersection(fuzzball, crate[i]);	
 
 		//Collision Ground-crate			
 		crateGround_Intersection(crate[i], ground);														
