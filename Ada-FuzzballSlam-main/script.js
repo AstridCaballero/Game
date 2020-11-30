@@ -28,7 +28,9 @@ var button;
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
-// var displayScore = false;
+// test for points to display on screen 
+var pointsGained1;
+
 var countGround = 0;
 // var timer;
 
@@ -257,41 +259,14 @@ function game_text(){
 	text_background(vp_width/2 - 20, 30, 170, 50);
 	small_text("Level " + level, vp_width/2 - 60, 40);
 
-	// // displays points as they are gained
-	// let pointsGained1 = small_text("10 points!", 710, 85); {
-	// 	pointsGained1.visibility = false;
-	// }
-
-	// let pointsGained2 = small_text("20 points!", 710, 85); {
-	// 	pointsGained2.visibility = false;
-	// }
-	// let pointsLost = small_text("-2 points!", 710, 85); {
-	// 	pointsLost.visibility = false;
-	// }
-
 	// create audio on/off button
 	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
-	button.position(108, 70, 180, 50); /// write this as percentage of viewport 
+	button.position(0.1 * vp_height, 0.1 * vp_width); /// write this as percentage of viewport 
 	button.size(50, 50);
 	button.mousePressed(audiotrack);
 }
 
-// function displayScoreText() {
-// 	if  (rectIdx.hitFuzz = 'True') {
-// 		pointsGained1.visibility = true;
-// 		setTimeout(() => {
-// 			pointsGained1.visibility = false;
-// 			console.log("stop displaying points");
-// 		}, 10000);	
-// 	} 
-	// else if (score += 20) {
-	// 	console.log("20 points!");
-	// 	small_text("20 points!", 710, 85);
-		// setTimeout(() => {
-			
-		// }, 10000);
-	// }
-// }
+
 
 
 // displays the text at the start state of the game
@@ -368,7 +343,8 @@ function obstacleFuzz_intersection(circle, rect){
 	// Only add points to score when the crate is hit for the first time			
 	if (collision_obst.collided && score > 0) {
 		score -= 2;
-		hit.play();				
+		hit.play();	
+		// ****			
 	}
 }
 
@@ -386,6 +362,7 @@ function crateGround_Intersection(rectIdx, rect){
 		//to count the one that was laready on the floor
 		if(countGround === crate.length){
 			score += 20;
+			// ****
 									
 		}
 	}	
@@ -451,3 +428,47 @@ function get_points(){
 		obstacleFuzz_intersection(fuzzball, obstacle);	
 	}
 }
+
+// var pointsGained1 = small_text("10 points!", 710, 85);
+
+// function displayScoreText() {
+// 	pointsGained1.show();
+// 	console.log("start displaying points");
+			
+// }
+			
+
+			// small_text("10 points!", 710, 85);
+			// pointsGained1.visible = true;
+			// setTimeout(() => {
+			// 	pointsGained1.visible = false;
+				
+			// }, 10000);	
+	
+	
+		// let pointsGained2 = small_text("20 points!", 710, 85); {
+		// 	pointsGained2.visibility = false;
+		// }
+		// let pointsLost = small_text("-2 points!", 710, 85); {
+		// 	pointsLost.visibility = false;
+		// }
+
+// function displayScoreText(circle, rect, rectIdx) {
+// 	let collision_crate = Matter.SAT.collides(circle.body, rectIdx.body);
+// 	let collision_obst = Matter.SAT.collides(circle.body, rect.body);
+// 	let collision_ground = Matter.SAT.collides(rectIdx.body, rect.body);
+// 	if  (rectIdx.hitFuzz = 'True') { // why is this not yet defined?
+// 		pointsGained1.visibility = true;
+// 		setTimeout(() => {
+// 			pointsGained1.visibility = false;
+// 			console.log("stop displaying points");
+// 		}, 10000);	
+// 	} 
+	// else if (score += 20) {
+	// 	console.log("20 points!");
+	// 	small_text("20 points!", 710, 85);
+	// 	setTimeout(() => {
+			
+	// 	}, 10000);
+	// }
+// }
