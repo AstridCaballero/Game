@@ -135,10 +135,11 @@ function reset_sketch(){
 	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
 
 	//create audio on/off button
-	button = createImg("Universal_(103).png");
-	button.position(vp_width/2 + 100, 30, 100, 50);
+	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
+	button.position(50, vp_height/2 - 275);
 	button.size(50, 50);
 	button.mousePressed(audiotrack);
+	//rect(x, y, w, h, 10)
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
