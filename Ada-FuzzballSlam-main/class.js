@@ -4,7 +4,7 @@ var defaultCategory = 0x0001, //this category is assigned to all objects that ca
     Category1 = 0x0002 //this category is assigned to all objects that can be interacted with via a mouse 
 
 class c_launcher {
-    constructor(x, y, body) { // see docs on http://brm.io/matter-js/docs/classes/Constraint.html#properties
+    constructor(x, y, body, img) { // see docs on http://brm.io/matter-js/docs/classes/Constraint.html#properties
         let options = {
             pointA: {
                 x: x,
@@ -20,26 +20,26 @@ class c_launcher {
         // create the constraint 
         this.launch = Matter.Constraint.create(options);
         Matter.World.add(world, this.launch); // add to the matter world
-        //image part of the class instead of a global variable
-        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
+        // image part of the class instead of a global variable
+        this.img = img;
     }
     release() {
-        //release the constrained body by setting it to null
+        // release the constrained body by setting it to null
         this.launch.bodyB = null;
     }
 
     show() {
-        //check to see if there is an active body
+        // check to see if there is an active body
         if(this.launch.bodyB) {
             stroke(255);
             let posA = this.launch.pointA; // create a shortcut alias for the launcher
-            let posB = this.launch.bodyB.position; //create a shortcut alias for the fuzzball relative to the launcher
-            line(posA.x, posA.y, posB.x, posB.y); //draw a line between the two points
+            let posB = this.launch.bodyB.position; // create a shortcut alias for the fuzzball relative to the launcher
+            line(posA.x, posA.y, posB.x, posB.y); // draw a line between the two points
         push();    
             translate((posA.x-50), posA.y);
-            line(posA.x, posA.y, posB.x, posB.y); //draw a line between the two points
+            line(posA.x, posA.y, posB.x, posB.y); // draw a line between the two points
             imageMode(CENTER);
-            //image part of the class instead of a global variable 
+            // image part of the class instead of a global variable 
             image(this.img, 0, 0);
         pop();    
             
@@ -62,7 +62,7 @@ class c_ground {
                 category: defaultCategory
             }          
         }
-        //create the body 
+        // create the body 
         this.body = Matter.Bodies.rectangle(x, y, width, height, options);
         Matter.World.add(world, this.body); // add to the matter world
 
@@ -84,7 +84,7 @@ class c_ground {
 
 
 class c_crate {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, img) {
         let options = {            
             restitution: 0.99,
             friction: 0.5,
@@ -102,13 +102,13 @@ class c_crate {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.hitFuzz = 'False';        
-        this.hitGround = 'False'; 
-        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');       
+        this.hitFuzz = 'False';  // flag to help checking if the crate has been already hit once by the fuzzball      
+        this.hitGround = 'False'; // flag to help checking if the crate has already hit the ground once.
+        this.img = img;
     }  
     
     body() {
-        return this.body; //return the created body 
+        return this.body; // return the created body 
     }
 
     show() {
@@ -120,7 +120,7 @@ class c_crate {
             imageMode(CENTER); // switch centre to be centre rather than left, top
             translate(pos.x, pos.y);
             rotate(angle);
-            //image part of the class instead of a global variable 
+            // image part of the class instead of a global variable 
             image(this.img, 0, 0, this.width, this.height)
         pop();
     }
@@ -128,12 +128,12 @@ class c_crate {
 
 
 class c_fuzzball {
-    constructor(x, y, diameter) {
+    constructor(x, y, diameter, img) {
         let options = {            
-            restitution: 0.90,
-            friction: 0.5,
-            density: 0.99,
-            frictionAir: 0.005,            
+            restitution: 0.90, // how bouncy the body is
+            friction: 0.5, // when the fuzzball rolls on the ground will roll faster or slower depending on the friction
+            density: 0.99, 
+            frictionAir: 0.005, // resistance given by the air           
             collisionFilter: {
                 category: Category1
             }          
@@ -146,9 +146,9 @@ class c_fuzzball {
         this.y = y;
         this.diameter = diameter;   
         this.count = 0;   
-        this.img = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');          
-        this.hitGround = 'False';
-        this.released =  'False';
+        this.img = img;
+        this.hitGround = 'False'; // flag to start check if the fuzzball has stopped moving
+        this.released =  'False'; // flag to check if fuzzball has been released
     }
 
     body() {
@@ -168,91 +168,48 @@ class c_fuzzball {
             translate(pos.x, pos.y);
             rotate(angle);           
             imageMode(CENTER); // switch centre to be centre rather than left, top
-            //image part of the class instead of a global variable            
+            // image part of the class instead of a global variable            
             image(this.img, 0, 0, this.diameter, this.diameter);
         pop();
     }
 }
 
-// the c_obstacle class inherits from c_crate and has its own property 'colour'
-// also it has override the method show()
+// the c_obstacle class inherits from c_ground and has its own properties 'colour' and numPoints
+// also it has override the method show() and has a method to create a star
+// so obstacle creates a static rectangle body that displays a star
 class c_obstacle extends c_ground{
-    constructor(x, y, r1, r2){                     
-        super(x, y);
-        let options = {
-            isStatic: true,
-            restitution: 0.05,
-            friction: 0.20,
-            density: 1, 
-            collisionFilter: {
-                category: defaultCategory
-            }          
-        }
-        //create the body 
-        this.body = Matter.Bodies.circle(x, y, r1, options);
-        Matter.World.add(world, this.body); // add to the matter world
+    constructor(x, y, width, height){                     
+        super(x, y, width, height);       
 
-        this.colour = '#000000'; 
-        this.r1 = r1;
-        this.r2 = r2;
+        this.colour = '#000000';        
         this.numPoints = 7;        
     } 
     
     createStar(){
-        //create the star
+        // create the star
         // code taken from https://p5js.org/examples/form-star.html
         let angle = TWO_PI / this.numPoints;
         let halfAngle = angle / 2.0;
-        
-        beginShape();        
+
+        beginShape(); // allows to start creating a polygon
         for (let a = 0; a < TWO_PI; a += angle) {
-            let sx = 0 + cos(a) * this.r2;
-            let sy = 0 + sin(a) * this.r2;
+            let sx = 0 + cos(a) * this.height;
+            let sy = 0 + sin(a) * this.height;
             vertex(sx, sy);
-            sx = 0 + cos(a + halfAngle) * this.r1;
-            sy = 0 + sin(a + halfAngle) * this.r1;
+            sx = 0 + cos(a + halfAngle) * this.width;
+            sy = 0 + sin(a + halfAngle) * this.width;
             vertex(sx, sy);
         }
-        endShape(CLOSE);    
+        endShape(CLOSE); // closes the polygon
     }
 
-    //overriding the c_ground show function
+    // overriding the c_ground show function
     show(){          
-        let pos = this.body.position;                 
-        
-        
-        
+        let pos = this.body.position; 
         fill(this.colour);
-        translate(pos.x, pos.y);
-        rotate(frameCount / 200.0);
-        this.createStar();           
+        translate(pos.x, pos.y); // takes the x and y of the body and set them as the origin
+        rotate(frameCount / 200.0); // rotates the body
+        // calls a method within the class
+        this.createStar();  // calls the method createStar() that has been created inside the function  
     }    
 }
-
-
-
-
-//wrapping up all the function related to collision
-// class c_intersection{
-//     constructor(bodyA, bodyB, score, countGround = 0, crate_length = 0){
-//         this.bodyA = bodyA,
-//         this.bodyB = bodyB,
-//         this.score = score,
-//         this.countGround = countGround,
-//         this.hitGround = bodyA.hitGround,
-//         // this.hitFuzz = bodyB.hitFuzz,
-//         this.crate_length = crate_length
-//     }
-
-//     crateFuzz_intersection(){
-//         console.log(this.hitFuzz)
-//         // check if fuzzball has collided with a crate using the Matter.SAT.collides function
-//         let collision_crate = Matter.SAT.collides(this.bodyA.body, this.bodyB.body);			
-//         // crate have a propertty called hitfuzz set to false by default
-//         // Only add points to score when the crate is hit for the first time			
-//         if ((collision_crate.collided) && (this.bodyB.hitFuzz == 'False')) {			
-//             this.bodyB.hitFuzz = 'True';
-//             this.score += 10;				
-//         }
-//     }
-// }
