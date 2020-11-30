@@ -139,7 +139,6 @@ function reset_sketch(){
 	button.position(50, vp_height/2 - 275);
 	button.size(50, 50);
 	button.mousePressed(audiotrack);
-	//rect(x, y, w, h, 10)
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
@@ -362,7 +361,7 @@ function crateFuzz_intersection(circle, rectIdx){
 	// check if fuzzball has collided with a crate using the Matter.SAT.collides function
 	let collision_crate = Matter.SAT.collides(circle.body, rectIdx.body);
 	if (collision_crate.collided) {
-		hit.play(); // this will play the hit sound each and every time the fuzzball hits a crate, regardless of whether points are applied
+		hit.play(); // this will play the hit sound each and every time the fuzzball hits a crate, regardless of whether points are applied 
 	}			
 	// crates have a property called hitfuzz set to false by default
 	// Only add points to score when the crate is hit for the first time			
@@ -380,7 +379,8 @@ function obstacleFuzz_intersection(circle, rect){
 	// crate have a propertty called hitfuzz set to false by default
 	// Only add points to score when the crate is hit for the first time			
 	if (collision_obst.collided && score > 0) {
-		score -= 2;				
+		score -= 2;
+		hit.play();				
 	}
 }
 
