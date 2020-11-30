@@ -177,18 +177,82 @@ class c_fuzzball {
 // the c_obstacle class inherits from c_crate and has its own property 'colour'
 // also it has override the method show()
 class c_obstacle extends c_ground{
-    constructor(x, y, width, height){                     
-        super(x, y, width, height);
-        this.colour = '#ff0000'; 
+    constructor(x, y, r1, r2){                     
+        super(x, y);
+        let options = {
+            isStatic: true,
+            restitution: 0.05,
+            friction: 0.20,
+            density: 1, 
+            collisionFilter: {
+                category: defaultCategory
+            }          
+        }
+        //create the body 
+        this.body = Matter.Bodies.circle(x, y, r1, options);
+        Matter.World.add(world, this.body); // add to the matter world
+
+        this.colour = '#000000'; 
+        this.r1 = r1;
+        this.r2 = r2;
+        this.numPoints = 7;        
     } 
+    
+    createStar(){
+        //create the star
+        // code taken from https://p5js.org/examples/form-star.html
+        let angle = TWO_PI / this.numPoints;
+        let halfAngle = angle / 2.0;
+        
+        beginShape();        
+        for (let a = 0; a < TWO_PI; a += angle) {
+            let sx = 0 + cos(a) * this.r2;
+            let sy = 0 + sin(a) * this.r2;
+            vertex(sx, sy);
+            sx = 0 + cos(a + halfAngle) * this.r1;
+            sy = 0 + sin(a + halfAngle) * this.r1;
+            vertex(sx, sy);
+        }
+        endShape(CLOSE);    
+    }
 
     //overriding the c_ground show function
     show(){          
-        let pos = this.body.position; // create a shortcut alias
-        rectMode(CENTER); // switch centre to be centre rather than left          
+        let pos = this.body.position;                 
+        
+        
+        
         fill(this.colour);
-        // inherits show() functionality at the same time that is overriden
-        //super.show();   
-        rect(pos.x, pos.y, this.width, this.height);        
+        translate(pos.x, pos.y);
+        rotate(frameCount / 200.0);
+        this.createStar();           
     }    
 }
+
+
+
+
+//wrapping up all the function related to collision
+// class c_intersection{
+//     constructor(bodyA, bodyB, score, countGround = 0, crate_length = 0){
+//         this.bodyA = bodyA,
+//         this.bodyB = bodyB,
+//         this.score = score,
+//         this.countGround = countGround,
+//         this.hitGround = bodyA.hitGround,
+//         // this.hitFuzz = bodyB.hitFuzz,
+//         this.crate_length = crate_length
+//     }
+
+//     crateFuzz_intersection(){
+//         console.log(this.hitFuzz)
+//         // check if fuzzball has collided with a crate using the Matter.SAT.collides function
+//         let collision_crate = Matter.SAT.collides(this.bodyA.body, this.bodyB.body);			
+//         // crate have a propertty called hitfuzz set to false by default
+//         // Only add points to score when the crate is hit for the first time			
+//         if ((collision_crate.collided) && (this.bodyB.hitFuzz == 'False')) {			
+//             this.bodyB.hitFuzz = 'True';
+//             this.score += 10;				
+//         }
+//     }
+// }

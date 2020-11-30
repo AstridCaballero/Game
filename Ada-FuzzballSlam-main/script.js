@@ -152,7 +152,7 @@ function reset_sketch(){
 	
 	// create an obstacle
 	if (level > 1){
-		obstacle = new c_obstacle(get_random(400, 500), get_random(400, 500), 60, 60);
+		obstacle = new c_obstacle(get_random(400, 500), get_random(400, 450), 50, 20);
 	}
 	frameRate(60);
 };
@@ -413,10 +413,12 @@ function reset_launcher(){
 	}, 5000);
 }
 
-function get_points(){
+function get_points(){	
 	for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 		// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-		crateFuzz_intersection(fuzzball, crate[i]);	
+		crateFuzz_intersection(fuzzball, crate[i]);			
+
+
 		//Collision Ground-crate			
 		crateGround_Intersection(crate[i], ground);														
 	}
