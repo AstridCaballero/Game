@@ -180,10 +180,23 @@ function paint_assets() {
 	fuzzball.show(); 
 	game_text();
 
-	// this shows the obstacle from level 2 onwards
+	// Display points when fuzzball hits a crate
+	if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
+		big_text("+ 10", vp_width/2 - 100, vp_height/4);
+	}
+	// Display points when fuzzball hits ground
+	if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
+		big_text("+ 20", vp_width/2 - 100, vp_height/4 + 50);
+	}
+	// Display points when fuzzball hits ground
+	if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
+		big_text("- 2", vp_width/2 - 100, vp_height/4 + 20);
+	}
+	// this adds an obstacle from level 2
 	if (level > 1){
 		obstacle.show();				
-	}
+	};
+	
 }
 
 function draw() {
@@ -215,21 +228,6 @@ function draw() {
 		
 		// this function checks for collision in order to get points
 		get_points();
-
-		// this displays points when the fuzzball hits a crate
-		if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
-			big_text("+ 10", vp_width/2 - 100, vp_height/4);
-		}
-		// this displays points when the fuzzball hits the ground
-		if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
-			big_text("+ 20", vp_width/2 - 100, vp_height/4 + 20);
-		}
-
-		// this displays points when the fuzzball hits the ground
-		if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
-			big_text("- 2", vp_width/2 - 100, vp_height/4 + 40);
-		}
-		
 		
 		// this checks if the fuzzball has hit the ground, to track whether it is time to move to the next level or indicate gameover		
 		fuzzGround_intersection(fuzzball, ground);			
