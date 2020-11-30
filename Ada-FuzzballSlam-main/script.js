@@ -147,7 +147,7 @@ function resetSketch(){
 		if (i == max_crates - 1){
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
 			crate[i].hitGround ='True';
-			countGround += 1;
+			countGround += 1; // tracking the number of crate that have hit the floor
 		}
 		else {
 			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
@@ -175,8 +175,8 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-	gameText();	
-	displayScore();
+	// displayScore();
+	gameText();	// shows score, level and lifes
 }
 
 function draw() {
@@ -198,40 +198,28 @@ function draw() {
 		// lives = 3;
 		// max_crates = max_crates + 1;		
 		textLevelUp();
-		setTimeout(() => {
-			resetSketch();
+		setTimeout(() => {			
 			gameState = 'play';	
 		}, 3000);
 		noLoop;	
 	}
-	else {					
+	else {						
 		// is game status is 'play' then load the crate, fuzzball and launcher			
 		paint_assets(); // paint the assets	
-		
-		// if(elastic_constraint.body !== null) {	// if the mouse has clicked on a body			
-		// 	// console.log("elastic")		
-		// 	let pos = elastic_constraint.body.position; // create a shortcut alias
-		// 	// fill("#000000"); // set a fill colour
-		// 	// ellipse(pos.x, pos.y, 5, 5); // indicate the body that has been selected 
-
-		// 	let mouse = elastic_constraint.mouse.position;
-		// 	// stroke("#ffffff");
-		// 	line(pos.x, pos.y, mouse.x, mouse.y);					
-		// }
-		// displays score and lives		
-		// gameText();	 
 
 		// check collision to get points
 		for (let i = 0; i < crate.length; i++){ // Loop through the crate array
 			// check if fuzzball has collided with a crate using the Matter.SAT.collides function
 			crateFuzz_intersection(fuzzball, crate[i]);	
-			//Collision Ground-crate
+			//Collision Ground-crate			
 			crateGround_Intersection(crate[i], ground);														
 		}	
-		// check if fuzzball hit the ground
-		fuzzGround_intersection(fuzzball, ground);		
-		if(fuzzball.hitGround == 'True') {	
-			// console.log(fuzzball.body.speed);	
+
+		// check if fuzzball hit the ground to track next level or gameover		
+		fuzzGround_intersection(fuzzball, ground);			
+		if(fuzzball.hitGround == 'True') {				
+			// console.log(fuzzball.body.speed);
+			// console.log(crate.length);	
 			// if ball has been launched and has stopped moving
 			if(fuzzball.released = 'True' && fuzzball.body.speed < 0.28){ // body looks static when speed is around 2.7
 				// if body has stopped and there are not more lives then Game over
@@ -242,19 +230,29 @@ function draw() {
 						level = level + 1;
 						lives = 3;
 						max_crates = max_crates + 1;
-						resetSketch();
+						countGround = 0;
+						resetSketch();						
+						gameState = 'levelup';
 					}
 					else { // not all crates on floor and no more lives
 						// give sometime to display the information
 						setTimeout(() => {
 							// change the state of the game
-							gameState = 'gameover';		
+							gameState = 'gameover';	
+							level = 1;
+							lives = 3;
+							score = 0;
+							max_crates = 3;	
+							countGround = 0;
+							crate =[];
+							resetSketch();
 						}, 1000);
 					}					
 				}
-				else {
-					// if not all crates on the ground
-					if (countGround !== max_crates){
+				else {					
+					// if all crates are not on the ground
+					if (countGround !== max_crates){					
+						
 						// if fuzzball stopped moving but there are lives left then reset launcher and fuzzball
 						setTimeout(() => {
 							// Remove matter fuzzball
@@ -265,13 +263,15 @@ function draw() {
 							launcher.attach(fuzzball.body);
 						}, 5000);
 					}
-					else { // if all crates on the floor
-						// next level
+					else { // if all crates on the floor	
+						// next level						
 						level = level + 1;
 						lives = 3;
-						max_crates = max_crates + 1;						
-						gameState = 'levelup';							
-											
+						max_crates = max_crates + 1;	
+						countGround = 0;
+						resetSketch();
+						//update game state				
+						gameState = 'levelup';		
 					}					
 				}									
 			}
@@ -330,25 +330,12 @@ function textGameOver(){
 
 function textLevelUp(){
 	 // display level
-	bigText("Level " + level, vp_width/2 - 160, vp_height/2 - 40);
+	bigText("Level " + level, vp_width/2 - 120, vp_height/2 - 40);
  }
 
 function keyPressed() {
-// 	if (keyCode === 32) {
-// 		console.log("space key press");
-// 		// if there are lives left reset fuzzball and luncher
-// 		if (lives > 0){			
-// 			// Remove matter fuzzball
-// 			fuzzball.remove();		
-// 			//load a new ball, launcher and elastic_constraint
-// 			fuzzball = new c_fuzzball(200, vp_height-100, 60);		
-// 			//attach the new fuzzball back to the launcher
-// 			launcher.attach(fuzzball.body);	//attaches a body (in this case fuzzball) to the launcher object 			
-// 		}
-// 	}
 
-
-	// trigger the play state of the game
+	// triggers the play state of the game
 	if (keyCode === ENTER || keyCode === RETURN){
 		console.log("enter key press");		
 		//change update state
@@ -356,9 +343,8 @@ function keyPressed() {
 			gameState = 'play';
 			music.loop();
 		}
-		else if (gameState == 'gameover'){
-			gameState = 'start';
-			resetSketch(); 
+		else if(gameState == 'gameover'){
+			gameState = 'start';			
 		}				
 	}
 }
@@ -410,14 +396,7 @@ function crateGround_Intersection(rectIdx, rect){
 		//to count the one that was laready on the floor
 		if(countGround === crate.length){
 			score += 20;
-			//smallText("20 points!", 710, 82);				
-			// display 'move to next level'
-			// levelUp();
-			// add +1 to level
-			// add +1 to max_crates
-			// load the game with new crates
-			// here the reset comes
-			// go to either game over, next level, exit(timer)			
+			//smallText("20 points!", 710, 82);							
 		}
 	}	
 }
@@ -431,18 +410,8 @@ function fuzzGround_intersection(circle, rect){
 	if ((collision_fuzzball.collided) && (circle.hitGround == 'False')) {			
 		circle.hitGround = 'True';								
 	}
-}
- 
- function levelUp(){
-	setTimeout(() => {
-		// level += 1;
-		// max_crates += 1;
-		// reset graphics		
-		// display next level text 	
-		 	
-	}, 5000);
-	 
- }
+} 
+
 
 
  
