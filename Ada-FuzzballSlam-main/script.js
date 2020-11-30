@@ -20,6 +20,7 @@ var img;
 //musical variables
 var music;
 var hit;
+var button;
 
 // variables to calculate during the game
 var score = 0;
@@ -71,21 +72,15 @@ function hittrack() { // this won't work until we associate it with a collision 
 	}
 }
 
-function audiotrack() { //this works and there is now an off/on button outside the viewport 
-	if(music.isPlaying()) {
+function audiotrack() { 
+	if (music.isPlaying() == true) {
 		console.log("stopping audio");
 		music.stop();
-	} else {
-		music.setVolume(0.15);
+	} else if (music.isPlaying() == false) {
 		console.log("starting audio");
-		music.loop();
+		music.play();
 	}
-}
-
-function displayScore() {
-	smallText(score + " points!", 710, 85);
-	setTimeout(() => {}, 5000);
-}
+}	
 
 function preload() {
 	//Load background
@@ -135,7 +130,12 @@ function resetSketch(){
 	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
 
 	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
-	
+
+	//create audio on/off button
+	button = createImg("Universal_(103).png");
+	button.position(vp_width/2 + 100, 30, 100, 50);
+	button.size(50, 50);
+	button.mousePressed(audiotrack);
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
@@ -164,6 +164,7 @@ function paint_background() {
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
 	rightwall.show();
+	button.show();
 }
 
 
@@ -175,8 +176,8 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-	// displayScore();
-	gameText();	// shows score, level and lifes
+	button.show(); //shows the on/off button for music 
+	gameText();	// shows score, level and lives
 }
 
 function draw() {
@@ -306,12 +307,29 @@ function gameText(){
 
 	// display lives text
 	text_background(108, 30, 180, 50);		
-	smallText("Lives left " + lives, 40, 42);		
+	smallText("Lives left: " + lives, 40, 42);		
 	
 	// displays level
 	text_background(vp_width/2 - 20, 30, 170, 50);
 	smallText("Level " + level, vp_width/2 - 60, 40);
+
 }
+
+function displayScoreText() {
+	if  ((score += 10) && (displayScore == false)) {
+		// displayScore = true; // this part is not linking in properly 
+		smallText("10 points!", 710, 85);
+		setTimeout(() => {
+			displayScore = false;
+			console.log("stop displaying score");
+		}, 10000);	
+	} 
+	// else if (score += 20) {
+	// 	console.log("20 points!");
+	// 	smallText("20 points!", 710, 85);
+	// }
+}
+
 
 // displays the text at the start state of the game
 function textStart() {
@@ -334,7 +352,6 @@ function textLevelUp(){
  }
 
 function keyPressed() {
-
 	// triggers the play state of the game
 	if (keyCode === ENTER || keyCode === RETURN){
 		console.log("enter key press");		
@@ -376,8 +393,7 @@ function crateFuzz_intersection(circle, rectIdx){
 	if ((collision_crate.collided) && (rectIdx.hitFuzz == 'False')) {			
 		rectIdx.hitFuzz = 'True';
 		score += 10;
-		displayScore = true;
-		console.log(displayScore);
+		displayScoreText();
 	}
 }
 
@@ -391,11 +407,13 @@ function crateGround_Intersection(rectIdx, rect){
 		rectIdx.hitGround = 'True';
 		score += 20;
 		countGround += 1;
+		// displayScoreText();
 		//smallText("20 points!", 710, 82);
 		//If all the crates have hit the floor then add 20 points 
 		//to count the one that was laready on the floor
 		if(countGround === crate.length){
 			score += 20;
+			// displayScoreText();
 			//smallText("20 points!", 710, 82);							
 		}
 	}	
