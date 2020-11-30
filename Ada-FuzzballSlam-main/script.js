@@ -23,11 +23,14 @@ var img;
 //musical variables
 var music;
 var hit;
+var button;
 
 // variables to calculate during the game
 var score = 0;
 var lives = 3;
+var displayScore = false;
 var countGround = 0;
+// var timer;
 
 // variable to keep track of the state of the game
 var gameState = 'start';
@@ -72,16 +75,15 @@ function hittrack() { // this won't work until we associate it with a collision 
 	}
 }
 
-function audiotrack() { //this works and there is now an off/on button outside the viewport 
-	if(music.isPlaying()) {
+function audiotrack() { 
+	if (music.isPlaying() == true) {
 		console.log("stopping audio");
 		music.stop();
-	} else {
-		music.setVolume(0.15);
+	} else if (music.isPlaying() == false) {
 		console.log("starting audio");
-		music.loop();
+		music.play();
 	}
-}
+}	
 
 function preload() {
 	//Load background
@@ -131,7 +133,13 @@ function reset_sketch(){
 	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
 
 	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
-	
+
+	//create audio on/off button
+	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
+	button.position(50, vp_height/2 - 275);
+	button.size(50, 50);
+	button.mousePressed(audiotrack);
+	//rect(x, y, w, h, 10)
 
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
@@ -165,6 +173,7 @@ function paint_background() {
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
 	rightwall.show();
+	button.show();
 }
 
 
@@ -176,6 +185,7 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
+	button.show(); //shows the on/off button for music 
 	game_text();	// shows score, level and lifes
 	// add obstacle from level 2
 	if (level > 1){
@@ -194,6 +204,7 @@ function draw() {
 		text_start();				
 		}	
 	else if (gameState == 'gameover'){
+		music.stop();
 		text_gameover();
 	}	
 	else if (gameState == 'levelup'){			
@@ -274,8 +285,27 @@ function game_text(){
 	
 	// displays level
 	text_background(vp_width/2 - 20, 30, 170, 50);
-	small_text("level " + level, vp_width/2 - 60, 40);
+	small_text("Level " + level, vp_width/2 - 60, 40);
 }
+
+function displayScoreText() {
+	if  ((score += 10) && (displayScore = false)) {
+		// displayScore = true; // this part is not linking in properly 
+		small_text("10 points!", 710, 85);
+		setTimeout(() => {
+			// displayScore = false;
+			console.log("stop displaying score");
+		}, 10000);	
+	} 
+	// else if (score += 20) {
+	// 	console.log("20 points!");
+	// 	small_text("20 points!", 710, 85);
+		// setTimeout(() => {
+			
+		// }, 10000);
+	// }
+}
+
 
 // displays the text at the start state of the game
 function text_start() {
@@ -298,13 +328,13 @@ function text_gameover(){
  }
 
 function keyPressed() {
-
 	// triggers the play state of the game
 	if (keyCode === ENTER || keyCode === RETURN){
 		console.log("enter key press");		
 		//change update state
-		if(gameState == 'start'){
+		if (gameState == 'start'){
 			gameState = 'play';
+			music.loop();
 		}
 		else if(gameState == 'gameover'){
 			gameState = 'start';			
@@ -313,7 +343,7 @@ function keyPressed() {
 }
 
 function mouseClicked() { 
-	if(elastic_constraint.body !== null) { // if the mouse has clicked on a body
+	if(elastic_constraint.body !== null) { // if the mouse has activated the elastic constraint
 		setTimeout(() => {
 			launcher.release();	// release after 1 milisecond to get momentum	
 		}, 100);
@@ -330,12 +360,16 @@ function mouseClicked() {
 // collision fuzzball-crate
 function crateFuzz_intersection(circle, rectIdx){
 	// check if fuzzball has collided with a crate using the Matter.SAT.collides function
-	let collision_crate = Matter.SAT.collides(circle.body, rectIdx.body);			
-	// crate have a propertty called hitfuzz set to false by default
+	let collision_crate = Matter.SAT.collides(circle.body, rectIdx.body);
+	if (collision_crate.collided) {
+		hit.play(); // this will play the hit sound each and every time the fuzzball hits a crate, regardless of whether points are applied
+	}			
+	// crates have a property called hitfuzz set to false by default
 	// Only add points to score when the crate is hit for the first time			
 	if ((collision_crate.collided) && (rectIdx.hitFuzz == 'False')) {			
 		rectIdx.hitFuzz = 'True';
-		score += 10;				
+		score += 10;
+		displayScoreText();
 	}
 }
 
@@ -359,11 +393,12 @@ function crateGround_Intersection(rectIdx, rect){
 	if((collision_ground.collided) && (rectIdx.hitGround == 'False')) {									
 		rectIdx.hitGround = 'True';
 		score += 20;
-		countGround += 1;		
+		countGround += 1;
 		//If all the crates have hit the floor then add 20 points 
 		//to count the one that was laready on the floor
 		if(countGround === crate.length){
 			score += 20;
+									
 		}
 	}	
 }

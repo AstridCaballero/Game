@@ -21,29 +21,19 @@ body {
 	align-items: center;
 }
 
-
 #viewport_container {
 	position: relative;
 	left: 0px;
 	top: 0px;
 }
 
-
 #start {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;	
 	position: absolute;
 	left: 580px;
 	top: 300px;
 	visibility: hidden;
 }
-#bigText {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+#fuzzball {
 	position: absolute;
 	left: 480px;
 	top: 200px;
