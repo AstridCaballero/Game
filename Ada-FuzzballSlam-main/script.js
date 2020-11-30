@@ -13,12 +13,14 @@ var rightwall;
 
 var fuzzball;
 var launcher;
-
-// create obstacle
+// declare obstacle
 var obstacle;
 
 //variables related to the images
-var img;
+var imgBackground;
+var imgLauncher;
+var imgCrate;
+var imgFuzzball;
 
 //musical variables
 var music;
@@ -87,7 +89,7 @@ function audiotrack() {
 
 function preload() {
 	//Load background
-	img = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");	
+	imgBackground = loadImage("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/SlamBackground920x690.png");	
 
 	//music/audio
 	music = loadSound("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/AmbientLoop.mp3");
@@ -106,6 +108,11 @@ function setup() {
 }
 
 function reset_sketch(){
+	// load images
+	imgLauncher = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Launcher146x108.png');
+	imgCrate = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Crate120x120.png');       
+	imgFuzzball = loadImage('https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Fuzzball60x60.png');          
+
 	//enable the matter engine
 	engine = Matter.Engine.create();
 	world = engine.world;
@@ -128,11 +135,11 @@ function reset_sketch(){
 	elastic_constraint = Matter.MouseConstraint.create(engine, options);
 	Matter.World.add(world, elastic_constraint); // add the elastic constraint object to the world
 	
-	ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175, "ground"); // create a ground object
-	leftwall = new c_ground(-88, vp_height/2, 175, vp_height, "leftwall");
-	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height, "rightwall");
+	ground = new c_ground(vp_width/2, vp_height+50, vp_width, 175); // create a ground object
+	leftwall = new c_ground(-88, vp_height/2, 175, vp_height);
+	rightwall = new c_ground(vp_width+88, vp_height/2, 175, vp_height);
 
-	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
+	fuzzball = new c_fuzzball(250, vp_height-150, 60, imgFuzzball); // create a fuzzball object
 
 	//create audio on/off button
 	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
@@ -142,19 +149,19 @@ function reset_sketch(){
 	//rect(x, y, w, h, 10)
 
 	//create a launcher object using the fuzzball body
-	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
+	launcher = new c_launcher(250, vp_height-150, fuzzball.body, imgLauncher);
 	
 	//loop through each of the crate indexes
 	for(let i = 0; i < max_crates; i++) { //loop for each instance of a crate
 		// last crate in the array is the crate at the bottom of the pile of crates to start the game
 		// so lets set that one to "hitGround = true" before checking for collisions
 		if (i == max_crates - 1){
-			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120, imgCrate);
 			crate[i].hitGround ='True';
 			countGround += 1; // tracking the number of crate that have hit the floor
 		}
 		else {
-			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120);
+			crate[i] = new c_crate(get_random(680, 710), (150*i)-300, 120, 120, imgCrate);
 		}				
 	} 
 	
@@ -168,7 +175,7 @@ function reset_sketch(){
 
 function paint_background() {
 	// access the game object for the world, use this as a background image for the game
-	background(img);
+	background(imgBackground);
 
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
@@ -297,13 +304,6 @@ function displayScoreText() {
 			console.log("stop displaying score");
 		}, 10000);	
 	} 
-	// else if (score += 20) {
-	// 	console.log("20 points!");
-	// 	small_text("20 points!", 710, 85);
-		// setTimeout(() => {
-			
-		// }, 10000);
-	// }
 }
 
 
@@ -442,7 +442,7 @@ function reset_launcher(){
 		// Remove matter fuzzball
 		fuzzball.remove();
 		//load a new ball, launcher and elastic_constraint
-		fuzzball = new c_fuzzball(200, vp_height-100, 60);		
+		fuzzball = new c_fuzzball(200, vp_height-100, 60, imgFuzzball);		
 		//attach the new fuzzball back to the launcher
 		launcher.attach(fuzzball.body);
 	}, 5000);
