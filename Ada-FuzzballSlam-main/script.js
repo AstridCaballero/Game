@@ -36,29 +36,6 @@ var countGround = 0;
 var gameState = 'start';
 var level = 1;
 
-
-function apply_velocity() {
-	Matter.Body.setVelocity( fuzzball.body, {x: get_random(0, 20), y: get_random(0, 20)*-1});
-};
-
-function apply_angularvelocity() {
-	for (let i = 0; i < crate.length; i++ ){
-		Matter.Body.setAngularVelocity( crate[i].body, Math.PI/get_random(3, 20));
-	}	
-};
-
-function apply_force() {
-	for (let i = 0; i < crate.length; i++) {
-		Matter.Body.applyForce( crate[i].body, {
-			x: crate[i].body.position.x,
-			y: crate[i].body.position.y
-		}, {
-			x: 0.05,
-			y: get_random(50, 200)*-1
-		});
-	}	
-};
-
 function get_random(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
@@ -134,12 +111,6 @@ function reset_sketch(){
 
 	fuzzball = new c_fuzzball(250, vp_height-150, 60, "fuzzball"); // create a fuzzball object
 
-	//create audio on/off button
-	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
-	button.position(50, vp_height/2 - 275);
-	button.size(50, 50);
-	button.mousePressed(audiotrack);
-
 	//create a launcher object using the fuzzball body
 	launcher = new c_launcher(250, vp_height-150, fuzzball.body);
 	
@@ -172,7 +143,7 @@ function paint_background() {
 	ground.show(); // execute the show function for the boundary objects
 	leftwall.show();
 	rightwall.show();
-	button.show();
+	// button.show();
 }
 
 
@@ -184,7 +155,7 @@ function paint_assets() {
 
 	launcher.show();  //show the launcher 
 	fuzzball.show(); //show the fuzzball
-	button.show(); //shows the on/off button for music 
+	// button.show(); //shows the on/off button for music 
 	game_text();	// shows score, level and lifes
 	// add obstacle from level 2
 	if (level > 1){
@@ -285,6 +256,12 @@ function game_text(){
 	// displays level
 	text_background(vp_width/2 - 20, 30, 170, 50);
 	small_text("Level " + level, vp_width/2 - 60, 40);
+
+	//create audio on/off button
+	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
+	button.position(108, 70, 180, 50);
+	button.size(50, 50);
+	button.mousePressed(audiotrack);
 }
 
 function displayScoreText() {
