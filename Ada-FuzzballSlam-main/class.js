@@ -203,7 +203,7 @@ class c_obstacle extends c_ground{
         // code taken from https://p5js.org/examples/form-star.html
         let angle = TWO_PI / this.numPoints;
         let halfAngle = angle / 2.0;
-        
+
         beginShape();        
         for (let a = 0; a < TWO_PI; a += angle) {
             let sx = 0 + cos(a) * this.r2;
@@ -218,13 +218,11 @@ class c_obstacle extends c_ground{
 
     //overriding the c_ground show function
     show(){          
-        let pos = this.body.position;                 
-        
-        
-        
+        let pos = this.body.position; 
         fill(this.colour);
         translate(pos.x, pos.y);
         rotate(frameCount / 200.0);
+        // calls a method within the class
         this.createStar();           
     }    
 }
