@@ -147,7 +147,7 @@ function reset_sketch(){
 
 	//create audio on/off button
 	button = createImg("https://adaresource.s3.eu-west-2.amazonaws.com/assets/fuzzballslam/Universal_(103).png");
-	button.position(50, vp_height/2 - 275);
+	button.position(50, vp_height/2 - 275);	
 	button.size(50, 50);
 	button.mousePressed(audiotrack);
 
@@ -197,10 +197,25 @@ function paint_assets() {
 	fuzzball.show(); //show the fuzzball
 	button.show(); //shows the on/off button for music 
 	game_text();	// shows score, level and lifes
+
+	// Display points when fuzzball hits a crate
+	if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
+		big_text("+ 10", vp_width/2 - 100, vp_height/4);
+	}
+	// Display points when fuzzball hits ground
+	if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
+		big_text("+ 20", vp_width/2 - 100, vp_height/4 + 50);
+	}
+
+	// Display points when fuzzball hits ground
+	if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
+		big_text("- 2", vp_width/2 - 100, vp_height/4 + 20);
+	}
 	// add obstacle from level 2
 	if (level > 1){
 		obstacle.show();				
-	}
+	};
+	
 }
 
 function draw() {
@@ -217,7 +232,7 @@ function draw() {
 		music.stop();
 		text_gameover();
 	}	
-	else if (gameState == 'levelup'){			
+	else if (gameState == 'levelup'){
 		text_levelup();
 		// update game state to be able to continue playing
 		setTimeout(() => {			
@@ -232,19 +247,19 @@ function draw() {
 		// check collision to get points
 		get_points();
 
-		// Display points when fuzzball hits a crate
-		if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
-			big_text("+ 10", vp_width/2 - 100, vp_height/4);
-		}
-		// Display points when fuzzball hits ground
-		if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
-			big_text("+ 20", vp_width/2 - 100, vp_height/4 + 20);
-		}
+		// // Display points when fuzzball hits a crate
+		// if (frameCount >= start_time_crate && frameCount < start_time_crate + 30){
+		// 	big_text("+ 10", vp_width/2 - 100, vp_height/4);
+		// }
+		// // Display points when fuzzball hits ground
+		// if (frameCount >= start_time_ground && frameCount < start_time_ground + 30 && fuzzball.hitGround == 'True'){
+		// 	big_text("+ 20", vp_width/2 - 100, vp_height/4 + 50);
+		// }
 
-		// Display points when fuzzball hits ground
-		if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
-			big_text("- 2", vp_width/2 - 100, vp_height/4 + 40);
-		}
+		// // Display points when fuzzball hits ground
+		// if (frameCount >= start_time_obst && frameCount < start_time_obst + 30){
+		// 	big_text("- 2", vp_width/2 - 100, vp_height/4 + 20);
+		// }
 		
 		
 		// check if fuzzball hit the ground to track next level or gameover		

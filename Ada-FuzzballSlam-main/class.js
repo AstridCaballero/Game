@@ -176,14 +176,13 @@ class c_fuzzball {
 
 // the c_obstacle class inherits from c_ground and has its own properties 'colour' and numPoints
 // also it has override the method show() and has a method to create a star
-// so obstacle creates a static rectangle body that displays a star
+// so obstacle creates a static rectangle body that displays a moving star
 class c_obstacle extends c_ground{
     constructor(x, y, width, height){                     
-        super(x, y, width, height);       
-
+        super(x, y, width, height, body);
         this.colour = '#000000';        
         this.numPoints = 7;        
-    } 
+    }    
     
     createStar(){
         // create the star
@@ -208,7 +207,7 @@ class c_obstacle extends c_ground{
         let pos = this.body.position; 
         fill(this.colour);
         translate(pos.x, pos.y); // takes the x and y of the body and set them as the origin
-        rotate(frameCount / 200.0); // rotates the body
+        rotate(frameCount / 200.0); // rotates the body                      
         // calls a method within the class
         this.createStar();  // calls the method createStar() that has been created inside the function  
     }    
